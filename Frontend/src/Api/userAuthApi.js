@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = 'http://localhost:5113'
+const url = 'http://localhost:5115'
 
 export const register = async(data) => {
     try {
@@ -8,5 +8,14 @@ export const register = async(data) => {
         return response; 
     } catch (error) {
         throw error 
+    }
+}
+
+export const login = async(data)=>{
+    try {
+        const response= await axios.post(`${url}/userAuth/login`,data)
+        return response
+    } catch (error) {
+        throw error
     }
 }
