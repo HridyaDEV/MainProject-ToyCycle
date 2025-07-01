@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { sellToy } from '../Api/toyApi';
 import { FaArrowLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import ProfileBtn from '../components/ProfileBtn';
 
 const Sell = () => {
   const [formData, setFormData] = useState({
@@ -11,14 +13,14 @@ const Sell = () => {
     ageCategory: '',
     toyCategory: '',
     condition: '',
-    material:"",
-    color:"",
-    weight:"",
+    material: "",
+    color: "",
+    weight: "",
     dimensionsLength: '',
-    dimensionsWidth:'',
-      isBatteryOperated: 'false', // default to false
-      batteryType: '',
-      image: null,
+    dimensionsWidth: '',
+    isBatteryOperated: 'false', // default to false
+    batteryType: '',
+    image: null,
   });
 
   const navigate = useNavigate();
@@ -35,6 +37,12 @@ const Sell = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
+
+    if (!token) {
+      toast.error("Login first to sell.");
+      return;
+    }
+
     const form = new FormData();
     Object.entries(formData).forEach(([key, value]) => {
       form.append(key, value);
@@ -42,14 +50,16 @@ const Sell = () => {
 
     try {
       const data = await sellToy(form, token);
-      alert("Product listed successfully!");
+    toast.success("Product listed successfully!");
       setFormData({
         title: '', price: '', description: '', ageCategory: '',
-        toyCategory: '', condition: '', image: null
+        toyCategory: '', condition: '', material: '', color: '',
+        weight: '', dimensionsLength: '', dimensionsWidth: '',
+        dimensionsHeight: '', isBatteryOperated: 'false', batteryType: '', image: null
       });
       document.querySelector('input[type="file"]').value = "";
     } catch (err) {
-      alert("Error uploading toy: " + (err.response?.data?.message || err.message));
+      toast.error("Error uploading toy: " + (err.response?.data?.message || err.message));
     }
   };
 
@@ -58,10 +68,7 @@ const Sell = () => {
       {/* Header */}
       <header className="bg-white shadow-md px-10 py-4 flex justify-between items-center sticky top-0 z-10">
         <h1 className="text-3xl font-extrabold text-amber-900 tracking-wide">ToyCycle</h1>
-        <button className="bg-amber-950 hover:bg-amber-800 text-white px-6 py-2 rounded-md font-medium transition duration-300"
-          onClick={() => navigate('/profile')}>
-          Profile
-        </button>
+        <ProfileBtn/>
       </header>
 
       {/* Back Button */}
@@ -110,7 +117,7 @@ const Sell = () => {
                 <option value="1-2">1–2 years</option>
                 <option value="2-3">2–3 years</option>
                 <option value="3-5">3–5 years</option>
-                <option value="6-8">6–8 years</option>
+                <option value="6-8">6-8 years</option>
                 <option value="9-12">9–12 years</option>
                 <option value="12+">12+ years</option>
               </select>
@@ -194,34 +201,34 @@ const Sell = () => {
                   className="w-1/3 border border-gray-300 p-2 rounded-lg" />
               </div>
             </div>
-{/* Battery Operated */}
-<div>
-  <label className="block text-sm font-medium text-gray-700 mb-1">Battery Operated</label>
-  <select
-    name="isBatteryOperated"
-    value={formData.isBatteryOperated}
-    onChange={handleChange}
-    className="w-full border border-gray-300 p-3 rounded-lg"
-  >
-    <option value="false">No</option>
-    <option value="true">Yes</option>
-  </select>
-</div>
+            {/* Battery Operated */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Battery Operated</label>
+              <select
+                name="isBatteryOperated"
+                value={formData.isBatteryOperated}
+                onChange={handleChange}
+                className="w-full border border-gray-300 p-3 rounded-lg"
+              >
+                <option value="false">No</option>
+                <option value="true">Yes</option>
+              </select>
+            </div>
 
-{/* Battery Type */}
-{formData.isBatteryOperated === 'true' && (
-  <div>
-    <label className="block text-sm font-medium text-gray-700 mb-1">Battery Type</label>
-    <input
-      type="text"
-      name="batteryType"
-      placeholder="e.g., AA, AAA, Rechargeable"
-      value={formData.batteryType}
-      onChange={handleChange}
-      className="w-full border border-gray-300 p-3 rounded-lg"
-    />
-  </div>
-)}
+            {/* Battery Type */}
+            {formData.isBatteryOperated === 'true' && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Battery Type</label>
+                <input
+                  type="text"
+                  name="batteryType"
+                  placeholder="e.g., AA, AAA, Rechargeable"
+                  value={formData.batteryType}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 p-3 rounded-lg"
+                />
+              </div>
+            )}
 
 
             {/* Image Upload */}

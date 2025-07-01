@@ -4,6 +4,8 @@ import { getToyDetails } from '../Api/toyApi';
 import { FaArrowLeft } from 'react-icons/fa';
 import { BsFillCartFill } from 'react-icons/bs';
 import { addToCart } from '../Api/cartApi';
+import CartBtn from '../components/CartBtn';
+import { toast } from 'react-toastify';
 
 const ProductDetails = () => {
     const { id } = useParams();
@@ -30,17 +32,17 @@ const ProductDetails = () => {
         const token = localStorage.getItem("token");
 
         if (!token) {
-            alert("Please login to add items to your cart.");
+            toast.error("Please login to add items to your cart.");
             navigate("/login")
             return;
         }
 
         try {
             await addToCart(toy._id, token);
-            alert("Added to cart!");
+        toast.success("Added to cart!");
         } catch (error) {
             console.error("Add to cart error:", error);
-            alert("Something went wrong!");
+            toast.error("Something went wrong!");
         }
     };
 
@@ -50,15 +52,13 @@ const ProductDetails = () => {
             <header className="bg-white shadow px-8 py-4 flex justify-between items-center sticky top-0 z-10">
                 <h1 className="text-3xl font-extrabold text-amber-900 tracking-wide">ToyCycle</h1>
                 <div className="flex items-center gap-6">
-                    <span className="text-amber-950 font-medium text-lg cursor-pointer hover:underline">
-                        Your Favourites
-                    </span>
-                    <button className="bg-amber-950 hover:bg-amber-900 text-white px-4 py-2 rounded text-2xl "
+                    <h1
+                        onClick={() => navigate("/favs")}
+                        className="text-amber-950 font-medium text-sm cursor-pointer hover:underline transition"
                     >
-
-                        {/* <BsCart /> */}
-                        <BsFillCartFill />
-                    </button>
+                        Your Favourites
+                    </h1>
+                    <CartBtn/>
                 </div>
             </header>
 

@@ -52,3 +52,13 @@ export const getToyDetails =  async (id) => {
         throw error; 
     }
 }
+
+export const getToysByCategory = async (category) => {
+  try {
+    const res = await axios.get(`${url}/toy/category/${category}`);
+    return res.data;
+  } catch (error) {
+    console.error("Error fetching toys by category:", error);
+    return { success: false, data: [] };
+  }
+};

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { register } from '../Api/userAuthApi';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 function SignUp() {
 
@@ -26,14 +27,12 @@ function SignUp() {
 
     try {
       const res = await register(formData)
-      console.log("Raw response:", res);
-      console.log("Registered user:", res.data);
-      alert("Registration successful")
+      toast.success("Registration successful")
       navigate('/')
 
     } catch (error) {
       console.error("Error:", error.response?.data || error.message);
-      alert("Registration Failed");
+      toast.error("Registration Failed");
     }
   }
 

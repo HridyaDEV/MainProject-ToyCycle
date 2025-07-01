@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { getUserProfile } from "../Api/userApi";
 import { getMyToys } from "../Api/toyApi";
 import { BsFillCartFill } from "react-icons/bs";
+import CartBtn from "../components/CartBtn";
 
 const Profile = () => {
     const [user, setUser] = useState(null);
@@ -60,27 +61,23 @@ const Profile = () => {
                 <h1 className="text-3xl font-extrabold text-amber-900 tracking-wide">
                     ToyCycle
                 </h1>
-                <div className="flex justify-center items-center gap-10">
-                {/* <h1 className=" text-amber-950 font-semibold">Your Favourites</h1> */}
-                <h1
-      onClick={() => navigate("/favs")}
-  className="text-amber-950 font-semibold cursor-pointer hover:underline"
->
-  Your Favourites
-</h1>
+                <div className="flex justify-center items-center gap-5">
+                    {/* <h1 className=" text-amber-950 font-semibold">Your Favourites</h1> */}
+                    <h1
+                        onClick={() => navigate("/favs")}
+                        className="text-amber-950 font-semibold cursor-pointer hover:underline"
+                    >
+                        Your Favourites
+                    </h1>
 
-                  <button className="bg-amber-950 hover:bg-amber-900 text-white px-4 py-2 rounded text-2xl ">
-                
-               {/* <BsCart /> */}
-                 <BsFillCartFill />
-                </button>
-                <button
-                    onClick={handleLogout}
-                    className="flex items-center bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-300"
-                >
-                    <FaSignOutAlt className="mr-2" />
-                    Logout
-                </button>
+                    <CartBtn/>
+                    <button
+                        onClick={handleLogout}
+                        className="flex items-center bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-300"
+                    >
+                        <FaSignOutAlt className="mr-2" />
+                        Logout
+                    </button>
                 </div>
             </header>
 
@@ -99,9 +96,9 @@ const Profile = () => {
                 <div className="bg-white shadow-xl rounded-3xl p-10 w-full max-w-3xl border border-amber-200">
                     <div className="flex flex-col items-center gap-4">
                         <img
-                         src="https://www.w3schools.com/howto/img_avatar2.png"
-                         alt="Profile"
-                         className="w-32 h-32 rounded-full border-4 border-amber-500 shadow-md object-cover"
+                            src="https://www.w3schools.com/howto/img_avatar2.png"
+                            alt="Profile"
+                            className="w-32 h-32 rounded-full border-4 border-amber-500 shadow-md object-cover"
                         />
                         <h2 className="text-2xl font-bold text-amber-900">{user.userName}</h2>
                         <p className="text-gray-600">{user.email}</p>
@@ -110,19 +107,19 @@ const Profile = () => {
                         </p>
                         <div className="flex justify-center items-center gap-5">
 
-                      
-                        <button
-                            onClick={handleEdit}
-                            className="mt-4 bg-amber-500 hover:bg-amber-600 text-white px-6 py-2 rounded-lg transition duration-300 flex items-center"
-                        >
-                            <FaEdit className="mr-2" />
-                            Edit Profile
-                        </button>
-                        <button className="mt-4 bg-amber-500 hover:bg-amber-600 text-white px-6 py-2 rounded-lg transition duration-300 flex items-center"
-                        >
-                            <FaChild className="mr-2" />
-                            Add Child</button>
-                          </div>
+
+                            <button
+                                onClick={handleEdit}
+                                className="mt-4 bg-amber-500 hover:bg-amber-600 text-white px-6 py-2 rounded-lg transition duration-300 flex items-center"
+                            >
+                                <FaEdit className="mr-2" />
+                                Edit Profile
+                            </button>
+                            <button className="mt-4 bg-amber-500 hover:bg-amber-600 text-white px-6 py-2 rounded-lg transition duration-300 flex items-center"
+                            >
+                                <FaChild className="mr-2" />
+                                Add Child</button>
+                        </div>
 
                     </div>
 
@@ -138,10 +135,10 @@ const Profile = () => {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {myToys.map((toy) => (
                                     <div key={toy._id} className="border rounded-lg p-4 shadow-sm bg-orange-50">
-                                        <img 
-                                        // src={toy.imageUrl}
+                                        <img
+                                            // src={toy.imageUrl}
                                             src={`http://localhost:5115${toy.imageUrl}`}
-                                         alt={toy.title} className="w-full h-48 object-cover rounded-md mb-2" />
+                                            alt={toy.title} className="w-full h-48 object-cover rounded-md mb-2" />
                                         <h4 className="text-lg font-bold text-amber-900">{toy.title}</h4>
                                         <p className="text-sm text-gray-600">{toy.toyCategory}</p>
                                         <p className="text-sm text-gray-500">₹{toy.price}</p>

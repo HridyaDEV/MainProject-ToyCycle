@@ -111,3 +111,19 @@ exports.getToyById = async (req, res) =>{
     res.status(500).json({success:false, message:"server error"})
   }
 }
+
+
+exports.getToysByCategory = async (req, res) => {
+  try {
+    const category = decodeURIComponent(req.params.category); // ✅ Fix: Decode URL
+    console.log("Searching toys in category:", category);
+
+    const toys = await Toy.find({ toyCategory: category });
+
+    res.status(200).json({ success: true, data: toys });
+  } catch (error) {
+    console.error("Error fetching toys by category:", error.message);
+    res.status(500).json({ success: false, message: "Something went wrong" });
+  }
+};
+

@@ -10,6 +10,9 @@ import Shop from './Pages/Shop';
 import ProductDetails from './Pages/ProductDetails';
 import Cart from './Pages/Cart';
 import Favourite from './Pages/Favourite';
+import { ToastContainer } from 'react-toastify';
+import CategoryPage from './Pages/CategoryPage';
+import CategorySpecificPage from './Pages/CategorySpecificPage';
 
 
 function App() {
@@ -24,11 +27,29 @@ function App() {
           <Route path='/profile' element={<Profile />} />
           <Route path='/shop' element={<Shop />} />
           <Route path="/product/:id" element={<ProductDetails />} />
-          <Route path="/cart" element={<Cart/>}/>
-          <Route path="/favs" element={<Favourite/>}/>
-
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/favs" element={<Favourite />} />
+          <Route path="/categories" element={<CategoryPage />} />
+                <Route path="/category/:categoryName" element={<CategorySpecificPage />} />
 
         </Routes>
+
+        <ToastContainer
+          position="top-right"
+          autoClose={2000}
+          hideProgressBar={false}
+          newestOnTop={true}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+
+
+        />
+
+
       </BrowserRouter>
     </>
   )

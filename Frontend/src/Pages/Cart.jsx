@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { getCartItems, removeFromCart } from "../Api/cartApi";
 import { useNavigate } from "react-router-dom";
+import { FaArrowLeft } from "react-icons/fa";
+import { BsCartX } from "react-icons/bs";
 
 const Cart = () => {
   const [items, setItems] = useState([]);
@@ -34,59 +36,79 @@ const Cart = () => {
   const total = items.reduce((acc, item) => acc + item.price, 0);
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-10">
-      <h1 className="text-3xl font-bold text-amber-900 mb-6">Your Cart</h1>
+    <div className="min-h-screen bg-amber-50">
+      <header className="bg-white shadow-md px-15 py-5 flex justify-between items-center sticky top-0 z-20">
+        <h1 className="text-3xl font-bold text-amber-900 tracking-wide">ToyCycle</h1>
+      </header>
 
-      {items.length === 0 ? (
-        <p className="text-gray-600">Your cart is empty.</p>
-      ) : (
-        <>
-          <div className="space-y-6">
+      <div className="px-15 py-5 mt-5  ">
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center text-amber-950 hover:text-amber-700 text-base mb-6"
+        >
+          <FaArrowLeft className="mr-2" /> Go Back
+        </button>
+
+        <h1 className=" flex justify-center text-3xl font-bold text-amber-900 mb-6">Your Cart</h1>
+
+        {items.length === 0 ? (
+          <div className="flex flex-col items-center justify-center text-gray-500 mt-20">
+            <BsCartX size={48} className="mb-4" />
+            <p className="text-xl">Your cart is empty.</p>
+            <button
+              onClick={() => navigate("/shop")}
+              className="mt-4 bg-amber-600 hover:bg-amber-700 text-white font-medium px-6 py-2 rounded"
+            >
+              Browse Toys
+            </button>
+          </div>
+        ) : (
+          <div className="max-w-4xl mx-auto space-y-12">
             {items.map((item) => (
               <div
                 key={item._id}
-                className="flex flex-col sm:flex-row gap-6 items-center bg-white p-4 shadow-md rounded-lg"
+                className="flex flex-col sm:flex-row items-center bg-white p-4 shadow rounded-lg gap-6"
               >
                 <img
                   src={`http://localhost:5115${item.imageUrl}`}
                   alt={item.title}
                   className="w-28 h-28 object-cover rounded-md"
                 />
-                <div className="flex-1">
+                <div className="flex-1 text-center sm:text-left">
                   <h2 className="text-lg font-semibold text-gray-800">{item.title}</h2>
-                  <p className="text-yellow-700 font-medium mt-1">₹ {item.price}</p>
+                  <p className="text-yellow-800 font-medium mt-1">₹ {item.price}</p>
                 </div>
                 <button
                   onClick={() => handleRemove(item._id)}
-                  className="text-red-600 hover:text-red-800 font-medium text-sm"
+                  className="text-red-600 hover:text-red-800 text-sm font-medium"
                 >
                   Remove
                 </button>
               </div>
             ))}
-          </div>
 
-          <div className="mt-8 border-t pt-6 flex flex-col sm:flex-row justify-between items-center">
-            <div className="text-xl font-semibold text-gray-800 mb-4 sm:mb-0">
-              Total: ₹ {total}
-            </div>
-            <div className="flex gap-4">
-              <button
-                onClick={() => navigate("/shop")}
-                className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded"
-              >
-                Continue Shopping
-              </button>
-              <button
-                onClick={() => alert("Proceeding to checkout...")}
-                className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-4 py-2 rounded shadow"
-              >
-                Proceed to Buy
-              </button>
+            <div className="border-t pt-6 flex flex-col sm:flex-row justify-between items-center">
+              <div className="text-2xl font-semibold text-gray-800 mb-4 sm:mb-0">
+                Total: ₹ {total}
+              </div>
+              <div className="flex gap-4">
+                <button
+                  onClick={() => navigate("/shop")}
+                  className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded"
+                >
+                  Continue Shopping
+                </button>
+                <button
+                  onClick={() => alert("Proceeding to checkout...")}
+                  className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-4 py-2 rounded shadow"
+                >
+                  Proceed to Buy
+                </button>
+              </div>
             </div>
           </div>
-        </>
-      )}
+        )}
+      </div>
     </div>
   );
 };

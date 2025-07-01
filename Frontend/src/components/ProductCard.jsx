@@ -3,6 +3,7 @@ import { BiHeart, BiSolidHeart } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import { addToCart } from "../Api/cartApi";
 import { getFavorites, toggleFavorite } from "../Api/favApi";
+import { toast } from "react-toastify";
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
@@ -10,7 +11,6 @@ const ProductCard = ({ product }) => {
 
   const userId = localStorage.getItem("userId");
 
-  // Fetch favorites on component mount
 useEffect(() => {
   const fetchFavorites = async () => {
     const userId = localStorage.getItem("userId");
@@ -32,11 +32,10 @@ useEffect(() => {
   fetchFavorites();
 }, [product._id]);
 
-
   // Handle heart icon click
   const handleToggleFavorite = async () => {
     if (!userId) {
-      alert("Please login to use favorites.");
+      toast.error("Please login to use favorites.");
       navigate("/login");
       return;
     }
@@ -59,17 +58,17 @@ useEffect(() => {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      alert("Please login to add items to your cart.");
+      toast.error("Please login to add items to your cart.");
       navigate("/login");
       return;
     }
 
     try {
       await addToCart(product._id, token); // changed toy._id to product._id
-      alert("Added to cart!");
+      toast.success("Added to cart!");
     } catch (error) {
       console.error("Add to cart error:", error);
-      alert("Something went wrong!");
+      toast.success("Something went wrong!");
     }
   };
 
@@ -85,14 +84,14 @@ useEffect(() => {
         className="absolute top-4 right-4 text-gray-600 bg-white rounded-full w-8 h-8 mr-1 mt-1 flex items-center justify-center"
       >
         {isFavorite ? (
-          <BiSolidHeart className="w-6 h-6 text-red-500" />
+          <BiSolidHeart className="w-6 h-6 text-red-600" />
         ) : (
           <BiHeart className="w-6 h-6" />
         )}
       </button>
 
       <div className="flex justify-between items-center">
-        <h2 className="text-lg font-semibold mt-4">{product.title}</h2>
+        <h2 className="text-lg text-amber-950 font-semibold mt-4">{product.title}</h2>
         <p className="text-lg font-bold mt-1">₹ {product.price}</p>
       </div>
 
