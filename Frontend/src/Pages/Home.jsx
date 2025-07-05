@@ -131,11 +131,18 @@ function Home() {
       </div>
       {/* Show More Button */}
       <div className="flex justify-end px-4 md:px-16 mt-6">
-        <button className="bg-yellow-500 hover:bg-yellow-600 text-amber-950 font-semibold px-5 py-2 rounded-md flex items-center gap-2">
+        <button className="bg-yellow-500 hover:bg-yellow-600 text-amber-950 font-semibold px-5 py-2 rounded-md flex items-center gap-2"
+        onClick={()=>navigate("/shop")}
+        >
           SHOW MORE →
         </button>
       </div>
 
+<button className="bg-yellow-500 hover:bg-yellow-600 text-amber-950 font-semibold px-5 py-2 rounded-md flex items-center gap-2"
+onClick={()=>navigate("/admin")}
+>
+          Admin →
+        </button>
     </>
   );
 }

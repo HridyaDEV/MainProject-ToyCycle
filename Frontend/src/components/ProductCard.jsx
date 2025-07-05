@@ -64,11 +64,12 @@ useEffect(() => {
     }
 
     try {
-      await addToCart(product._id, token); // changed toy._id to product._id
+        const quantity = 1;
+      await addToCart(product._id, quantity, token); // changed toy._id to product._id
       toast.success("Added to cart!");
     } catch (error) {
       console.error("Add to cart error:", error);
-      toast.success("Something went wrong!");
+      toast.error("Something went wrong!");
     }
   };
 

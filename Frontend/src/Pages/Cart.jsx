@@ -10,10 +10,12 @@ const Cart = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    
     if (!token) return navigate("/login");
 
     const fetchCart = async () => {
       try {
+            const token = localStorage.getItem("token");
         const data = await getCartItems(token);
         setItems(data);
       } catch (error) {
@@ -33,7 +35,7 @@ const Cart = () => {
     }
   };
 
-  const total = items.reduce((acc, item) => acc + item.price, 0);
+const total = items.reduce((acc, item) => acc + item.price * (item.quantity || 1), 0);
 
   return (
     <div className="min-h-screen bg-amber-50">
@@ -77,6 +79,12 @@ const Cart = () => {
                 <div className="flex-1 text-center sm:text-left">
                   <h2 className="text-lg font-semibold text-gray-800">{item.title}</h2>
                   <p className="text-yellow-800 font-medium mt-1">₹ {item.price}</p>
+                   {item.quantity && (
+    <>
+      <p className="text-sm text-gray-600 mt-1">Quantity: {item.quantity}</p>
+      <p className="text-sm text-gray-800 font-semibold">Subtotal: ₹ {item.price * item.quantity}</p>
+    </>
+  )}
                 </div>
                 <button
                   onClick={() => handleRemove(item._id)}

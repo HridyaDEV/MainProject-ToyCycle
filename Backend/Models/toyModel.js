@@ -36,14 +36,22 @@ const toySchema = new mongoose.Schema({
     type: String,
     enum: ["Plastic", "Wood", "Metal", "Fabric", "Mixed", "Other"]
   },
-  weight: { type: Number },
+  weight: {
+    type: Number
+  },
+
+  quantity: {
+    type: Number,
+    required: true,
+    min: 1
+  },
 
   dimensions: {
     length: { type: Number },
     width: { type: Number },
     height: { type: Number }
   },
-  
+
   isBatteryOperated: { type: Boolean, default: false },
 
   batteryType: { type: String }, // e.g., "AA", "AAA", "Rechargeable"

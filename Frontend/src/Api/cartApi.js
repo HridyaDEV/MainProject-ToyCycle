@@ -2,8 +2,8 @@ import axios from "axios";
 
 const url = "http://localhost:5115";
 
-export const addToCart = async (toyId, token) => {
-    return await axios.post(`${url}/cart/add`, { toyId }, {
+export const addToCart = async (toyId, quantity, token) => {
+    return await axios.post(`${url}/cart/add`, { toyId, quantity }, {
         headers: { Authorization: `Bearer ${token}` },
     });
 };

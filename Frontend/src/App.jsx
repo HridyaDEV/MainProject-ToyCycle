@@ -13,6 +13,7 @@ import Favourite from './Pages/Favourite';
 import { ToastContainer } from 'react-toastify';
 import CategoryPage from './Pages/CategoryPage';
 import CategorySpecificPage from './Pages/CategorySpecificPage';
+import AdminDashboard from './Pages/AdminDashboard';
 
 
 function App() {
@@ -30,7 +31,9 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/favs" element={<Favourite />} />
           <Route path="/categories" element={<CategoryPage />} />
-                <Route path="/category/:categoryName" element={<CategorySpecificPage />} />
+          <Route path="/category/:categoryName" element={<CategorySpecificPage />} />
+          <Route path="/admin" element={<AdminDashboard />} />
+
 
         </Routes>
 

@@ -8,6 +8,7 @@ exports.sellToy = async (req, res) => {
     const { title,  price, description, ageCategory, toyCategory, condition,   material,
       color,
       weight,
+      quantity,
       dimensionsLength,
       dimensionsWidth,
       dimensionsHeight,
@@ -36,6 +37,7 @@ exports.sellToy = async (req, res) => {
       material: material || undefined,
       color: color || undefined,
       weight: weight ? Number(weight) : undefined,
+      quantity,
       dimensions: {
         length: dimensionsLength ? Number(dimensionsLength) : undefined,
         width: dimensionsWidth ? Number(dimensionsWidth) : undefined,

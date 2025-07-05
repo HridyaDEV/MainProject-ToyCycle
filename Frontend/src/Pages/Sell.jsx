@@ -21,6 +21,7 @@ const Sell = () => {
     isBatteryOperated: 'false', // default to false
     batteryType: '',
     image: null,
+    quantity: '',
   });
 
   const navigate = useNavigate();
@@ -50,7 +51,7 @@ const Sell = () => {
 
     try {
       const data = await sellToy(form, token);
-    toast.success("Product listed successfully!");
+      toast.success("Product listed successfully!");
       setFormData({
         title: '', price: '', description: '', ageCategory: '',
         toyCategory: '', condition: '', material: '', color: '',
@@ -68,7 +69,7 @@ const Sell = () => {
       {/* Header */}
       <header className="bg-white shadow-md px-10 py-4 flex justify-between items-center sticky top-0 z-10">
         <h1 className="text-3xl font-extrabold text-amber-900 tracking-wide">ToyCycle</h1>
-        <ProfileBtn/>
+        <ProfileBtn />
       </header>
 
       {/* Back Button */}
@@ -185,6 +186,21 @@ const Sell = () => {
               <input type="number" name="weight" value={formData.weight} onChange={handleChange}
                 className="w-full border border-gray-300 p-3 rounded-lg" />
             </div>
+            {/* Quantity */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
+              <input
+                type="number"
+                name="quantity"
+                min={1}
+                value={formData.quantity || ''} 
+                onChange={handleChange}
+                required
+                className="w-full border border-gray-300 p-3 rounded-lg"
+                placeholder="Number of items"
+              />
+            </div>
+
 
             {/* Dimensions */}
             <div>
