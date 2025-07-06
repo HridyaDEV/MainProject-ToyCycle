@@ -5,64 +5,61 @@ const Toy = require("../Models/toyModel")
 
 exports.addToCart = async (req, res) => {
   const userId = req.userId;
-  const { toyId, quantity } = req.body;
-
-  console.log("🟡 Received body:", req.body);
-console.log("🟢 quantity type:", typeof req.body.quantity);
-
-
-  // Step 1: Validate incoming data
-  if (!toyId || !quantity || quantity < 1) {
-    return res.status(400).json({ message: "toyId and valid quantity required" });
-  }
+  let { toyId, quantity } = req.body;
 
   try {
-    // Step 2: Check toy exists
-    const toy = await Toy.findById(toyId);
-    if (!toy) return res.status(404).json({ message: "Toy not found" });
+    console.log("🟡 Raw body received:", req.body);
 
-    // Step 3: Ensure requested quantity does not exceed available stock
-    if (quantity > toy.quantity) {
-      return res.status(400).json({ message: "Requested quantity exceeds stock" });
+    quantity = Number(quantity);
+    if (!toyId || isNaN(quantity) || quantity < 1) {
+      return res.status(400).json({ message: "Valid toyId and quantity required" });
     }
 
-    // Step 4: Find existing cart for this user
+    const toy = await Toy.findById(toyId);
+    if (!toy) {
+      return res.status(404).json({ message: "Toy not found" });
+    }
+
     let cart = await Cart.findOne({ userId });
 
     if (!cart) {
-      // Step 5: If no cart exists, create a new one
       cart = new Cart({
         userId,
-        items: [{ toyId, quantity }]
+        items: [{ toyId: toy._id, quantity }]
       });
     } else {
-      // Step 6: Check if toy already exists in this user's cart
-      const existingItem = cart.items.find(
-        item => item.toyId.toString() === toyId
+      const index = cart.items.findIndex(
+        item => item.toyId.toString() === toy._id.toString()
       );
 
-      if (existingItem) {
-        // Step 7: Add to existing quantity
-        const newQty = existingItem.quantity + quantity;
-        if (newQty > toy.quantity) {
-          return res.status(400).json({ message: "Exceeds available stock" });
-        }
-        existingItem.quantity = newQty;
+      if (index > -1) {
+        cart.items[index].quantity += quantity;
       } else {
-        // Step 8: Push new toy into items array
-        cart.items.push({ toyId, quantity });
+        cart.items.push({ toyId: toy._id, quantity });
       }
     }
 
-    // Step 9: Save the cart
-    await cart.save();
+    // 🔐 Filter bad items (TEMP safety)
+    cart.items = cart.items.filter(
+      item => item.toyId && typeof item.quantity === "number" && item.quantity > 0
+    );
 
+    console.log("🧾 Final cart before save:", JSON.stringify(cart, null, 2));
+
+    await cart.save();
     return res.status(200).json({ success: true, message: "Item added to cart" });
+
   } catch (err) {
-    console.error("❌ Add to cart error:", err.message, err.stack);
-    return res.status(500).json({ message: "Something went wrong" });
+    console.error("❌ Add to cart error:", err.message);
+    return res.status(500).json({
+      message: "Something went wrong in addToCart",
+      error: err.message
+    });
   }
 };
+
+
+
 
 // Get all toys in user's cart
 exports.getCartItems = async (req, res) => {

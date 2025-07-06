@@ -8,31 +8,24 @@ import { toast } from "react-toastify";
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
   const [isFavorite, setIsFavorite] = useState(false);
-
   const userId = localStorage.getItem("userId");
 
-useEffect(() => {
-  const fetchFavorites = async () => {
-    const userId = localStorage.getItem("userId");
-    
-    if (!userId) {
-      console.warn("No userId found in localStorage. Skipping favorites fetch.");
-      return;
-    }
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      if (!userId) return;
 
-    try {
-      const favorites = await getFavorites(userId);
-      const favIds = favorites.map((toy) => toy._id);
-      setIsFavorite(favIds.includes(product._id));
-    } catch (err) {
-      console.error("Error fetching favorites", err);
-    }
-  };
+      try {
+        const favorites = await getFavorites(userId);
+        const favIds = favorites.map((toy) => toy._id);
+        setIsFavorite(favIds.includes(product._id));
+      } catch (err) {
+        console.error("Error fetching favorites", err);
+      }
+    };
 
-  fetchFavorites();
-}, [product._id]);
+    fetchFavorites();
+  }, [product._id, userId]);
 
-  // Handle heart icon click
   const handleToggleFavorite = async () => {
     if (!userId) {
       toast.error("Please login to use favorites.");
@@ -48,12 +41,10 @@ useEffect(() => {
     }
   };
 
-  // Handle Know More button
   const handleKnowMore = () => {
     navigate(`/product/${product._id}`);
   };
 
-  // Handle Add to Cart
   const handleAddToCart = async () => {
     const token = localStorage.getItem("token");
 
@@ -63,13 +54,14 @@ useEffect(() => {
       return;
     }
 
+    const quantity = 1;
     try {
-        const quantity = 1;
-      await addToCart(product._id, quantity, token); // changed toy._id to product._id
+      console.log("🟢 Sending to API:", { toyId: product._id, quantity });
+      await addToCart(product._id, quantity, token);
       toast.success("Added to cart!");
     } catch (error) {
-      console.error("Add to cart error:", error);
-      toast.error("Something went wrong!");
+      console.error("Add to cart error:", error?.response?.data || error.message);
+      toast.error("Something went wrong while adding to cart!");
     }
   };
 
@@ -80,9 +72,10 @@ useEffect(() => {
         alt={product.title}
         className="w-full h-52 object-cover rounded-md"
       />
+
       <button
         onClick={handleToggleFavorite}
-        className="absolute top-4 right-4 text-gray-600 bg-white rounded-full w-8 h-8 mr-1 mt-1 flex items-center justify-center"
+        className="absolute top-4 right-4 text-gray-600 bg-white rounded-full w-8 h-8 flex items-center justify-center"
       >
         {isFavorite ? (
           <BiSolidHeart className="w-6 h-6 text-red-600" />
@@ -91,9 +84,9 @@ useEffect(() => {
         )}
       </button>
 
-      <div className="flex justify-between items-center">
-        <h2 className="text-lg text-amber-950 font-semibold mt-4">{product.title}</h2>
-        <p className="text-lg font-bold mt-1">₹ {product.price}</p>
+      <div className="flex justify-between items-center mt-4">
+        <h2 className="text-lg text-amber-950 font-semibold">{product.title}</h2>
+        <p className="text-lg font-bold">₹ {product.price}</p>
       </div>
 
       <div className="flex justify-between items-center mt-4">
