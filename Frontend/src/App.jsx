@@ -14,6 +14,10 @@ import { ToastContainer } from 'react-toastify';
 import CategoryPage from './Pages/CategoryPage';
 import CategorySpecificPage from './Pages/CategorySpecificPage';
 import AdminDashboard from './Pages/AdminDashboard';
+import UserDetails from './Pages/UserDetails';
+import AddVaccines from './Pages/AddVaccines';
+import AddChild from './Pages/AddChild';
+import Chat from './Pages/Chat';
 
 
 function App() {
@@ -33,6 +37,11 @@ function App() {
           <Route path="/categories" element={<CategoryPage />} />
           <Route path="/category/:categoryName" element={<CategorySpecificPage />} />
           <Route path="/admin" element={<AdminDashboard />} />
+           <Route path="/user" element={<UserDetails/>} />
+           <Route path="/vaccination" element={<AddVaccines/>} />
+           <Route path="/addchild" element={<AddChild/>}/>
+           <Route path="/chat" element={<Chat/>}/>
+
 
 
         </Routes>

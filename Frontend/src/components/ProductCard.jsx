@@ -56,7 +56,6 @@ const ProductCard = ({ product }) => {
 
     const quantity = 1;
     try {
-      console.log("🟢 Sending to API:", { toyId: product._id, quantity });
       await addToCart(product._id, quantity, token);
       toast.success("Added to cart!");
     } catch (error) {
@@ -91,7 +90,7 @@ const ProductCard = ({ product }) => {
 
       <div className="flex justify-between items-center mt-4">
         <button
-          className="text-sm text-gray-700 font-medium hover:text-amber-950"
+          className="text-sm text-gray-700 font-medium hover:text-amber-950 hover:underline"
           onClick={handleKnowMore}
         >
           Know More →

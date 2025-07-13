@@ -18,6 +18,8 @@ const userRoute = require("./Routes/userRoute");
 const cartRoute = require("./Routes/cartRoute")
 const favRoute = require("./Routes/FavRoute")
 const CategoryRoute = require("./Routes/categoryRoute")
+const vaccineRoute = require("./Routes/vaccineRoute")
+const childRoute = require("./Routes/childRoute")
 
 // Mount routes
 app.use("/toy", toyRoute);
@@ -26,6 +28,8 @@ app.use("/user", userRoute);
 app.use("/cart", cartRoute)
 app.use("/fav", favRoute)
 app.use("/category", CategoryRoute)
+app.use("/vaccine",vaccineRoute)
+app.use("/child",childRoute)
 
 // Database Connection
 const connectDB = async () => {

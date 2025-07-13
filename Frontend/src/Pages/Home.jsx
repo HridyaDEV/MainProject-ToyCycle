@@ -18,6 +18,10 @@ function Home() {
   useEffect(() => {
     const role = localStorage.getItem("userRole")
     setUserRole(role)
+
+    if (role === "admin") {
+    navigate("/admin");
+  }
   }, [])
   return (
     <>
@@ -138,11 +142,6 @@ function Home() {
         </button>
       </div>
 
-<button className="bg-yellow-500 hover:bg-yellow-600 text-amber-950 font-semibold px-5 py-2 rounded-md flex items-center gap-2"
-onClick={()=>navigate("/admin")}
->
-          Admin →
-        </button>
     </>
   );
 }

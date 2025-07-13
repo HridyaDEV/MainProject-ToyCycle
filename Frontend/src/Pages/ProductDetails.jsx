@@ -127,7 +127,9 @@ const ProductDetails = () => {
                                     onClick={handleAddToCart}>
                                     Add to Cart
                                 </button>
-                                <button className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-6 py-3 rounded-xl shadow-md transition duration-300 w-full sm:w-auto">
+                                <button className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-6 py-3 rounded-xl shadow-md transition duration-300 w-full sm:w-auto"
+                                onClick={()=>navigate("/chat")}
+                                >
                                     Chat with Seller</button>
                             </div>
 
