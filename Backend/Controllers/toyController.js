@@ -103,7 +103,7 @@ exports.getToysBySeller = async (req, res) => {
 
 exports.getToyById = async (req, res) =>{
   try {
-    const toy = await Toy.findById(req.params.id)
+    const toy = await Toy.findById(req.params.id).populate("sellerId","userName email")
     if(!toy) {
       return res.status(404).json({success:false, message: " Toy not found"})
     }
