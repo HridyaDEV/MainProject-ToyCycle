@@ -17,7 +17,8 @@ import AdminDashboard from './Pages/AdminDashboard';
 import UserDetails from './Pages/UserDetails';
 import AddVaccines from './Pages/AddVaccines';
 import AddChild from './Pages/AddChild';
-import Chat from './Pages/Chat';
+import AllMessages from './Pages/AllMessages';
+import ChatPage from './Pages/ChatPage';
 
 
 function App() {
@@ -40,7 +41,10 @@ function App() {
            <Route path="/user" element={<UserDetails/>} />
            <Route path="/vaccination" element={<AddVaccines/>} />
            <Route path="/addchild" element={<AddChild/>}/>
-           <Route path="/chat" element={<Chat/>}/>
+           <Route path="/chat/:roomId" element={<ChatPage/>}/>
+          <Route path="/messages" element={<AllMessages/>}/>
+
+
 
 
 

@@ -53,7 +53,7 @@ const Profile = () => {
                 <h1 className="text-amber-950 font-bold text-3xl">ToyCycle</h1>
                 <div className="flex items-center gap-3 text-xl">
                     <button
-                        onClick={() => navigate("/chat")}
+                        onClick={() => navigate("/messages")}
                         className="text-white bg-amber-950 hover:bg-amber-900 p-2 rounded-lg text-lg"
                     >
                         <GrChat />

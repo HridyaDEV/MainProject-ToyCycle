@@ -1,142 +1,136 @@
-import React, { useEffect, useRef, useState } from "react";
-import { FaPaperPlane } from "react-icons/fa";
-import axios from "axios";
-import { io } from "socket.io-client";
-import { useLocation, useNavigate } from "react-router-dom";
+// import React, { useEffect, useState, useRef } from 'react';
+// import { useParams, useNavigate } from 'react-router-dom';
+// import { io } from 'socket.io-client';
+// import axios from 'axios';
 
-const socket = io("http://localhost:5115");
+// const socket = io("http://localhost:5115");
 
-const Chat = () => {
-  const { state } = useLocation();
-console.log("Chat page state:", state);
+// const Chat = () => {
+//   const { roomId } = useParams();
+//   const navigate = useNavigate();
+//   const scrollRef = useRef();
 
-  const navigate = useNavigate();
+//   const [user, setUser] = useState(null);
+//   const [otherUser, setOtherUser] = useState(null);
+//   const [messages, setMessages] = useState([]);
+//   const [input, setInput] = useState("");
 
-  const user = state?.user;
-  const otherUser = state?.otherUser;
+//   // 1. Get current user from localStorage
+//   useEffect(() => {
+//     const storedUser = JSON.parse(localStorage.getItem("user"));
+//     if (!storedUser) return navigate("/login");
+//     setUser(storedUser);
+//   }, []);
 
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState("");
-  const scrollRef = useRef();
+//   // 2. Get chat participants from backend
+//   useEffect(() => {
+//     const fetchParticipants = async () => {
+//       try {
+//         const token = localStorage.getItem("token");
+//         const res = await axios.get(`http://localhost:5115/chat/participants/${roomId}`, {
+//           headers: { Authorization: `Bearer ${token}` },
+//         });
 
-  // 🛡️ Guard: If user or otherUser is missing, redirect or show message
-  useEffect(() => {
-    if (!user || !otherUser) {
-      navigate("/"); // Redirect to home or login if needed
-    }
-  }, [user, otherUser, navigate]);
+//         const currentId = JSON.parse(localStorage.getItem("user"))._id;
+//         const other = res.data.user._id === currentId ? res.data.otherUser : res.data.user;
 
-  if (!user || !otherUser) {
-    return (
-      <div className="flex justify-center items-center h-screen text-red-600 text-lg">
-        Missing chat data. Redirecting...
-      </div>
-    );
-  }
+//         setOtherUser(other);
+//       } catch (err) {
+//         console.error("Error loading participants:", err);
+//         navigate("/messages");
+//       }
+//     };
 
-  const roomId = [user._id, otherUser._id].sort().join("_");
+//     fetchParticipants();
+//   }, [roomId]);
 
-  // Join room & fetch old messages
-  useEffect(() => {
-    socket.emit("joinRoom", { roomId });
+//   // 3. Load previous messages and join room
+//   useEffect(() => {
+//     if (!user || !otherUser) return;
 
-    axios
-      .get(`http://localhost:5115/chat/messages/${user._id}/${otherUser._id}`)
-      .then((res) => setMessages(res.data))
-      .catch((err) => console.error("Fetch error:", err));
-  }, [roomId]);
+//     socket.emit("joinRoom", { roomId });
 
-  // Listen for new messages
-  useEffect(() => {
-    socket.on("receiveMessage", (msg) => {
-      setMessages((prev) => [...prev, msg]);
-    });
+//     axios
+//       .get(`http://localhost:5115/chat/messages/${user._id}/${otherUser._id}`)
+//       .then((res) => setMessages(res.data))
+//       .catch((err) => console.error("Message fetch error", err));
+//   }, [user, otherUser, roomId]);
 
-    return () => socket.off("receiveMessage");
-  }, []);
+//   // 4. Handle incoming socket messages
+//   useEffect(() => {
+//     socket.on("receiveMessage", (msg) => {
+//       setMessages((prev) => [...prev, msg]);
+//     });
 
-  // Auto-scroll
-  useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+//     return () => socket.off("receiveMessage");
+//   }, []);
 
-  const handleSend = (e) => {
-    e.preventDefault();
-    if (!input.trim()) return;
+//   const handleSend = (e) => {
+//     e.preventDefault();
+//     if (!input.trim()) return;
 
-    const messageData = {
-      roomId,
-      sender: user._id,
-      receiver: otherUser._id,
-      message: input,
-    };
+//     const msg = {
+//       roomId,
+//       sender: user._id,
+//       receiver: otherUser._id,
+//       message: input,
+//     };
 
-    socket.emit("sendMessage", messageData);
-    setMessages((prev) => [...prev, { sender: user._id, message: input }]);
-    setInput("");
-  };
+//     socket.emit("sendMessage", msg);
+//     setMessages((prev) => [...prev, { ...msg }]);
+//     setInput("");
+//   };
 
-  return (
-    <div className="w-full h-screen flex flex-col bg-gray-100">
-      {/* App Header */}
-      <header className="items-center bg-white shadow-lg px-6 py-3 sticky top-0 z-10">
-        <h1 className="text-amber-950 font-bold text-3xl">ToyCycle</h1>
-      </header>
+//   useEffect(() => {
+//     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+//   }, [messages]);
 
-      {/* Chat Header */}
-      <div className="flex items-center justify-between px-4 py-3 shadow bg-white">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-yellow-400 flex items-center justify-center text-white text-lg uppercase">
-            {otherUser.userName?.charAt(0)}
-          </div>
-          <div>
-            <h1 className="text-lg font-semibold">{otherUser.userName}</h1>
-            <p className="text-sm text-gray-500">Online</p>
-          </div>
-        </div>
-      </div>
+//   if (!user || !otherUser) {
+//     return <div className="text-center text-red-500 mt-20">Loading chat...</div>;
+//   }
 
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-8">
-        {messages.map((msg, idx) => (
-          <div
-            key={idx}
-            className={`flex ${
-              msg.sender === user._id ? "justify-end" : "justify-start"
-            }`}
-          >
-            <div
-              className={`px-4 py-2 rounded-xl max-w-xs ${
-                msg.sender === user._id
-                  ? "bg-yellow-500 text-white"
-                  : "bg-gray-300 text-gray-800"
-              }`}
-            >
-              {msg.message}
-            </div>
-          </div>
-        ))}
-        <div ref={scrollRef} />
-      </div>
+//   return (
+//     <div className="min-h-screen flex flex-col bg-gray-50">
+//       <header className="bg-white p-4 shadow-md sticky top-0 z-10">
+//         <h1 className="text-2xl font-bold text-amber-900">Chat with {otherUser.userName}</h1>
+//       </header>
 
-      {/* Input Box */}
-      <form onSubmit={handleSend} className="flex items-center gap-2 p-4 bg-white border-t">
-        <input
-          type="text"
-          placeholder="Type your message..."
-          className="flex-1 border px-4 py-2 rounded-full outline-none focus:ring-2 focus:ring-yellow-400"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-        />
-        <button
-          type="submit"
-          className="bg-amber-500 p-3 rounded-full text-white hover:bg-amber-600 transition"
-        >
-          <FaPaperPlane />
-        </button>
-      </form>
-    </div>
-  );
-};
+//       <div className="flex-1 overflow-y-auto p-4 space-y-3">
+//         {messages.map((msg, idx) => (
+//           <div
+//             key={idx}
+//             className={`max-w-md px-4 py-2 rounded-xl ${
+//               msg.sender === user._id
+//                 ? "ml-auto bg-yellow-400 text-white"
+//                 : "mr-auto bg-white text-black border"
+//             }`}
+//           >
+//             {msg.message}
+//           </div>
+//         ))}
+//         <div ref={scrollRef} />
+//       </div>
 
-export default Chat;
+//       <form
+//         onSubmit={handleSend}
+//         className="flex items-center gap-2 p-4 border-t bg-white"
+//       >
+//         <input
+//           type="text"
+//           className="flex-1 border px-4 py-2 rounded-full"
+//           placeholder="Type your message..."
+//           value={input}
+//           onChange={(e) => setInput(e.target.value)}
+//         />
+//         <button
+//           type="submit"
+//           className="bg-amber-500 text-white px-4 py-2 rounded-full"
+//         >
+//           Send
+//         </button>
+//       </form>
+//     </div>
+//   );
+// };
+
+// export default Chat;

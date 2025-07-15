@@ -27,12 +27,11 @@ function Login() {
             const res = await login(formData)
             toast.success("Login successful")
 
-            // localStorage.setItem("userId", res.data.user._id);
-            // localStorage.setItem("userRole", res.data.user.role);
+             localStorage.setItem("userId", res.data.user._id);
+              localStorage.setItem("userRole", res.data.user.role);
             
-localStorage.setItem("user", JSON.stringify(res.data.user));
             localStorage.setItem("token", res.data.token)
-
+localStorage.setItem("user", JSON.stringify(res.data.user));
             navigate('/')
             
         } catch (error) {
