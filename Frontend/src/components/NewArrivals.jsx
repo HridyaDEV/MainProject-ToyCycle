@@ -23,7 +23,7 @@ const NewArrivals = () => {
   
 
   return (
-    <div className="min-h-screen bg-white px-8 py-12">
+    <div className="min-h-screen bg-white ">
       <h1 className="text-3xl text-amber-950 font-semibold text-center mb-10">New Arrivals</h1>
 
       {products.length === 0 ? (

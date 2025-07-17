@@ -10,3 +10,8 @@ export const getUserProfile = async (token) => {
   });
   return response.data;
 };
+
+export const getAllUsers = async() => {
+  const response = await axios.get(`${url}/user/all-users`)
+  return response.data
+}

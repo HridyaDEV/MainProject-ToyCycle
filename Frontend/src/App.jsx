@@ -19,6 +19,8 @@ import AddVaccines from './Pages/AddVaccines';
 import AddChild from './Pages/AddChild';
 import AllMessages from './Pages/AllMessages';
 import ChatPage from './Pages/ChatPage';
+import AdminUserView from './Pages/AdminUserView';
+import AdminToyView from './Pages/AdminToyView';
 
 
 function App() {
@@ -43,6 +45,10 @@ function App() {
            <Route path="/addchild" element={<AddChild/>}/>
            <Route path="/chat/:roomId" element={<ChatPage/>}/>
           <Route path="/messages" element={<AllMessages/>}/>
+           <Route path="/userview" element={<AdminUserView/>}/>
+          <Route path="/toys" element={<AdminToyView/>}/>
+
+
 
 
 

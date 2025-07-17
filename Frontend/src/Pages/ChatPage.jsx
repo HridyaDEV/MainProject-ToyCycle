@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
 import io from "socket.io-client";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { IoIosSend } from "react-icons/io";
@@ -55,13 +55,13 @@ const ChatPage = () => {
     };
   }, [roomId, user, token]);
 
-  useEffect(() => {
-    setTimeout(() => {
+  useLayoutEffect(() => {
+   
       if (chatContainerRef.current) {
         chatContainerRef.current.scrollTop =
           chatContainerRef.current.scrollHeight;
       }
-    }, 100);
+    
   }, [messages]);
 
   const sendMessage = (e) => {
@@ -119,7 +119,7 @@ const ChatPage = () => {
 
           {/* Chat Messages */}
           <div
-            className="flex-1 overflow-y-auto px-4 py-2 space-y-3 bg-gray-50"
+            className="flex-1 overflow-y-auto px-4 py-2 space-y-3 bg-gray-50 scroll-smooth"
             ref={chatContainerRef}
           >
             {messages.map((msg, index) => (
