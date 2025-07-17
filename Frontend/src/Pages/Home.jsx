@@ -129,7 +129,7 @@ function Home() {
 
       </div>
 
-      <div id="new">
+      <div id="new" >
        
         <NewArrivals />
       </div>

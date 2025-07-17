@@ -21,6 +21,7 @@ const Profile = () => {
             try {
                 const userData = await getUserProfile(token);
                 setUser(userData);
+                console.log("User children:", userData.children);
                 const toysData = await getMyToys(token);
                 setMyToys(toysData);
             } catch (error) {
@@ -45,6 +46,22 @@ const Profile = () => {
             </div>
         );
     }
+    const calculateAge = (dob) => {
+        const birthDate = new Date(dob);
+        const today = new Date();
+
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+
+        if (
+            monthDiff < 0 ||
+            (monthDiff === 0 && today.getDate() < birthDate.getDate())
+        ) {
+            age--;
+        }
+
+        return age;
+    };
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-amber-50 to-yellow-100 text-gray-800 font-sans">
@@ -136,15 +153,12 @@ const Profile = () => {
                                             <div className=" text-2xl text-pink-400">
                                                 <FaChild />
                                             </div>
+                                         
                                             <div>
-                                                <p className="text-base font-semibold text-gray-800"> {child.name}</p>
-                                                <p className="text-sm text-gray-600">Age: {child.age}</p>
+                                                <p className="text-base font-semibold text-gray-800">{child.name}</p>
+                                                <p className="text-sm text-gray-600">Age: {calculateAge(child.dateOfBirth)} years</p>
                                                 <p className="text-sm text-gray-600">Gender: {child.gender}</p>
-                                                {child.dob && (
-                                                    <p className="text-sm text-gray-500 mt-1">
-                                                        DOB: {new Date(child.dob).toLocaleDateString()}
-                                                    </p>
-                                                )}
+                                               
                                             </div>
 
 
@@ -160,13 +174,13 @@ const Profile = () => {
                     <div className="md:w-2/3">
                         <section className="bg-white border border-orange-200 rounded-2xl shadow-md p-6">
                             <div className="flex justify-between items-center">
-                            <h3 className="text-xl font-semibold text-amber-800 mb-4">My Listed Items</h3>
-                             <button
-                                        onClick={() => navigate("/sell")}
-                                        className="bg-amber-100 hover:bg-amber-200 text-grey px-3 py-1.5 rounded-lg text-sm flex items-center"
-                                    >
-                                        <HiOutlinePlusSm className="mr-2" /> Add New Item
-                                    </button>
+                                <h3 className="text-xl font-semibold text-amber-800 mb-4">My Listed Items</h3>
+                                <button
+                                    onClick={() => navigate("/sell")}
+                                    className="bg-amber-100 hover:bg-amber-200 text-grey px-3 py-1.5 rounded-lg text-sm flex items-center"
+                                >
+                                    <HiOutlinePlusSm className="mr-2" /> Add New Item
+                                </button>
 
                             </div>
                             {myToys.length === 0 ? (

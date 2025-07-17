@@ -1,19 +1,24 @@
 import React, { useEffect, useState, useRef } from "react";
 import io from "socket.io-client";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { IoIosSend } from "react-icons/io";
 import { FaArrowLeft } from "react-icons/fa";
+import {
+  getMessages,
+  getOtherUserInfo,
+} from "../Api/chatApi"; // ⬅️ API imports
 
 const socket = io("http://localhost:5115");
 
 const ChatPage = () => {
   const { roomId } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
+  const chatContainerRef = useRef(null);
+
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [otherUserName, setOtherUserName] = useState("User");
-  const chatContainerRef = useRef(null);
 
   const user = JSON.parse(localStorage.getItem("user"));
   const token = localStorage.getItem("token");
@@ -26,35 +31,19 @@ const ChatPage = () => {
     const [user1, user2] = roomId.split("_");
     const otherUserId = user1 === user._id ? user2 : user1;
 
-    const fetchChatHistory = async () => {
+    const fetchChatData = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:5115/chat/messages/${user1}/${user2}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setMessages(res.data);
+        const msgs = await getMessages(user1, user2, token);
+        setMessages(msgs);
+
+        const otherUser = await getOtherUserInfo(roomId, token);
+        setOtherUserName(otherUser.userName);
       } catch (err) {
-        console.error("Error fetching chat history:", err);
+        console.error("Chat loading error:", err);
       }
     };
 
-    const fetchOtherUser = async () => {
-      try {
-        const res = await axios.get(`http://localhost:5115/api/users/${otherUserId}`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setOtherUserName(res.data.userName);
-      } catch (err) {
-        console.error("Error fetching other user:", err);
-      }
-    };
-
-    fetchChatHistory();
-    fetchOtherUser();
+    fetchChatData();
 
     socket.on("receiveMessage", (msg) => {
       setMessages((prev) => [...prev, msg]);
@@ -69,7 +58,8 @@ const ChatPage = () => {
   useEffect(() => {
     setTimeout(() => {
       if (chatContainerRef.current) {
-        chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+        chatContainerRef.current.scrollTop =
+          chatContainerRef.current.scrollHeight;
       }
     }, 100);
   }, [messages]);
@@ -101,31 +91,30 @@ const ChatPage = () => {
 
     setMessage("");
   };
-      const navigate = useNavigate()
-
 
   return (
     <div className="flex flex-col h-screen bg-yellow-100">
-      {/* Main App Header */}
+      {/* Header */}
       <header className="bg-white px-6 py-4 shadow-md">
         <h1 className="text-3xl font-extrabold text-amber-800">ToyCycle</h1>
       </header>
-       {/* Back Button */}
-                  <div className="px-10 py-5 ">
-                      <button
-                          onClick={() => navigate(-1)}
-                          className="flex items-center text-amber-950 hover:text-amber-700 transition duration-200 text-lg"
-                      >
-                          <FaArrowLeft className="mr-2" /> Go Back
-                      </button>
-                  </div>
+
+      {/* Back Button */}
+      <div className="px-10 py-5">
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center text-amber-950 hover:text-amber-700 transition duration-200 text-lg"
+        >
+          <FaArrowLeft className="mr-2" /> Go Back
+        </button>
+      </div>
 
       {/* Chat Card */}
-      <div className="flex justify-center items-center flex-1 ">
+      <div className="flex justify-center items-center flex-1">
         <div className="bg-white w-full max-w-3xl h-[90%] shadow-lg rounded-2xl flex flex-col">
           {/* Chat Header */}
           <div className="bg-yellow-500 text-white px-6 py-4 rounded-t-2xl shadow-sm">
-            <h2 className="text-xl font-semibold">{otherUserName}</h2>
+            <h2 className="text-xl font-semibold">Seller: {otherUserName}</h2>
           </div>
 
           {/* Chat Messages */}
@@ -154,10 +143,10 @@ const ChatPage = () => {
             ))}
           </div>
 
-          {/* Input Box */}
+          {/* Input Field */}
           <form
             onSubmit={sendMessage}
-            className="flex px-4 py-3  bg-gray-50 items-center gap-2"
+            className="flex px-4 py-3 bg-gray-50 items-center gap-2"
           >
             <input
               type="text"

@@ -1,4 +1,6 @@
 const Message = require("../Models/messageModel");
+const User = require("../Models/userModel");
+
 
 exports.getMessages = async (req, res) => {
   const { user1, user2 } = req.params;
@@ -23,7 +25,7 @@ exports.getAllChats = async (req, res) => {
       $or: [{ sender: userId }, { receiver: userId }],
     })
       .sort({ timestamp: -1 }) // latest first
-      .populate("sender", "userName email")    // Only select fields you need
+      .populate("sender", "userName email")    
       .populate("receiver", "userName email");
 
     const latestChats = {};
@@ -44,3 +46,24 @@ exports.getAllChats = async (req, res) => {
   }
 };
 
+
+exports.getOtherUserName = async (req, res) => {
+  const { roomId } = req.params;
+  const currentUserId = req.userId;
+
+  try {
+    const [id1, id2] = roomId.split("_");
+    const otherUserId = id1 === currentUserId ? id2 : id1;
+
+    const otherUser = await User.findById(otherUserId).select("userName");
+
+    if (!otherUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ userName: otherUser.userName });
+  } catch (err) {
+    console.error("Failed to get other user name:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
