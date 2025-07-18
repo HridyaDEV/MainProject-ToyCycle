@@ -38,6 +38,7 @@ const CategoryRoute = require("./Routes/categoryRoute")
 const vaccineRoute = require("./Routes/vaccineRoute")
 const childRoute = require("./Routes/childRoute")
 const chatRoute = require("./Routes/chatRoute")
+const dashboardRoute = require("./Routes/dashboardRoute")
 
 
 // Mount routes
@@ -50,6 +51,7 @@ app.use("/category", CategoryRoute)
 app.use("/vaccine",vaccineRoute)
 app.use("/child",childRoute)
 app.use("/chat",chatRoute)
+app.use("/dashboard", dashboardRoute)
 
 
 // Database Connection
