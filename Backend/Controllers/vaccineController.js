@@ -21,21 +21,28 @@ exports.addVaccine = async (req, res) => {
     res.status(201).json({ message: "✅ Vaccine added successfully." });
   } catch (err) {
     console.error("Error adding vaccine:", err);
-    res.status(500).json({ message: "❌ Failed to add vaccine." });
+    res.status(500).json({ message: " Failed to add vaccine." });
   }
 };
 
 
 //  Get all vaccines
 exports.getAllVaccines = async (req, res) => {
-    try {
-        const vaccines = await Vaccine.find();
-        res.status(200).json(vaccines);
-    } catch (err) {
-        console.error("Error fetching vaccines:", err);
-        res.status(500).json({ message: "❌ Failed to fetch vaccines." });
-    }
+  try {
+    const vaccines = await Vaccine.find();
+    res.status(200).json({
+      success: true,
+      data: vaccines,
+    });
+  } catch (err) {
+    console.error("Error fetching vaccines:", err);
+    res.status(500).json({
+      success: false,
+      message: " Failed to fetch vaccines.",
+    });
+  }
 };
+
 
 //  Delete a vaccine
 exports.deleteVaccine = async (req, res) => {

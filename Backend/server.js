@@ -23,7 +23,7 @@ socketConnection(io)
 
 // Middleware
 app.use(cors());
-app.use(express.json()); // Must come before routes to parse req.body
+app.use(express.json()); 
 app.use('/uploads', express.static('uploads')); // For image access
 
 
@@ -39,6 +39,7 @@ const vaccineRoute = require("./Routes/vaccineRoute")
 const childRoute = require("./Routes/childRoute")
 const chatRoute = require("./Routes/chatRoute")
 const dashboardRoute = require("./Routes/dashboardRoute")
+const paymentRoute = require('./Routes/paymentRoute')
 
 
 // Mount routes
@@ -52,6 +53,7 @@ app.use("/vaccine",vaccineRoute)
 app.use("/child",childRoute)
 app.use("/chat",chatRoute)
 app.use("/dashboard", dashboardRoute)
+app.use('/payment',paymentRoute)
 
 
 // Database Connection
@@ -63,6 +65,8 @@ const connectDB = async () => {
         console.error("Database connection failed:", error.message);
     }
 };
+
+require('./jobs/reminderJob')
 
 // Start the server
 const PORT = process.env.PORT || 5117;

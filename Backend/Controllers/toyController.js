@@ -117,7 +117,7 @@ exports.getToyById = async (req, res) =>{
 
 exports.getToysByCategory = async (req, res) => {
   try {
-    const category = decodeURIComponent(req.params.category); // ✅ Fix: Decode URL
+    const category = decodeURIComponent(req.params.category); 
     console.log("Searching toys in category:", category);
 
     const toys = await Toy.find({ toyCategory: category });

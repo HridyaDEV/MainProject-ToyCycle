@@ -21,6 +21,7 @@ import AllMessages from './Pages/AllMessages';
 import ChatPage from './Pages/ChatPage';
 import AdminUserView from './Pages/AdminUserView';
 import AdminToyView from './Pages/AdminToyView';
+import Vaccination from './Pages/Vaccination';
 
 
 function App() {
@@ -41,7 +42,8 @@ function App() {
           <Route path="/category/:categoryName" element={<CategorySpecificPage />} />
           <Route path="/admin" element={<AdminDashboard />} />
            <Route path="/user" element={<UserDetails/>} />
-           <Route path="/vaccination" element={<AddVaccines/>} />
+           <Route path="/vaccination" element = {<Vaccination/>}/>
+           <Route path="/addvaccine" element={<AddVaccines/>} />
            <Route path="/addchild" element={<AddChild/>}/>
            <Route path="/chat/:roomId" element={<ChatPage/>}/>
           <Route path="/messages" element={<AllMessages/>}/>

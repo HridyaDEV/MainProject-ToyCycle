@@ -3,6 +3,7 @@ import { getCartItems, removeFromCart } from "../Api/cartApi";
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 import { BsCartX } from "react-icons/bs";
+import { createCheckoutSession } from "../Api/paymentApi";
 
 const Cart = () => {
   const [items, setItems] = useState([]);
@@ -34,6 +35,18 @@ const Cart = () => {
       console.error("Error removing item:", error);
     }
   };
+  console.log("Cart Items:", items); 
+
+ const handleCheckout = async () => {
+  try {
+    const data = await createCheckoutSession(items); // 'items' should be your cart array
+    window.location.href = data.url;
+  } catch (error) {
+    console.error("Checkout failed", error);
+    alert("Something went wrong during checkout.");
+  }
+};
+
 
 const total = items.reduce((acc, item) => acc + item.price * (item.quantity || 1), 0);
 
@@ -107,7 +120,7 @@ const total = items.reduce((acc, item) => acc + item.price * (item.quantity || 1
                   Continue Shopping
                 </button>
                 <button
-                  onClick={() => alert("Proceeding to checkout...")}
+                  onClick={handleCheckout}
                   className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-4 py-2 rounded shadow"
                 >
                   Proceed to Buy

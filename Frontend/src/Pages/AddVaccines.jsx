@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { addVaccine } from "../Api/vaccinesApi";
+import { FaUsers } from "react-icons/fa";
+
+const GlassCard = ({ children }) => (
+  <div className="rounded-2xl p-5 bg-white/30 backdrop-blur-lg border border-white/20 shadow-md">
+    {children}
+  </div>
+);
 
 const AddVaccines = () => {
   const [form, setForm] = useState({
@@ -31,6 +38,7 @@ const AddVaccines = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+
          {/* Back Button */}
         <button
           onClick={() => navigate(-1)}
@@ -38,6 +46,7 @@ const AddVaccines = () => {
         >
           ← Back
         </button>
+       
 
       <div className="w-full max-w-lg bg-white p-8 rounded-2xl shadow-md relative">
 
