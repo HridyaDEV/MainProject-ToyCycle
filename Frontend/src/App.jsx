@@ -22,6 +22,7 @@ import ChatPage from './Pages/ChatPage';
 import AdminUserView from './Pages/AdminUserView';
 import AdminToyView from './Pages/AdminToyView';
 import Vaccination from './Pages/Vaccination';
+import ToyView from './Pages/ToyView';
 
 
 function App() {
@@ -41,7 +42,7 @@ function App() {
           <Route path="/categories" element={<CategoryPage />} />
           <Route path="/category/:categoryName" element={<CategorySpecificPage />} />
           <Route path="/admin" element={<AdminDashboard />} />
-           <Route path="/user" element={<UserDetails/>} />
+           {/* <Route path="/user" element={<UserDetails/>} /> */}
            <Route path="/vaccination" element = {<Vaccination/>}/>
            <Route path="/addvaccine" element={<AddVaccines/>} />
            <Route path="/addchild" element={<AddChild/>}/>
@@ -49,6 +50,10 @@ function App() {
           <Route path="/messages" element={<AllMessages/>}/>
            <Route path="/userview" element={<AdminUserView/>}/>
           <Route path="/toys" element={<AdminToyView/>}/>
+          <Route path="/admin/toys/view/:id" element={<ToyView />} />
+         <Route path="/userdetails/:id" element={<UserDetails/>} />
+
+
 
 
 

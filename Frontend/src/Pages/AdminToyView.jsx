@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { getAllToy } from "../Api/toyApi";
+import { getAllToy, deleteToyById } from "../Api/toyApi";
 import SideBar from "../components/SideBar";
+import { useNavigate } from "react-router-dom";
 
 const AdminToyView = () => {
   const [toys, setToys] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchToys = async () => {
       try {
         const response = await getAllToy();
-        console.log("Fetched toys:", response);
         if (response.success) {
           setToys(response.data);
         }
@@ -20,6 +21,33 @@ const AdminToyView = () => {
 
     fetchToys();
   }, []);
+
+  const handleView = (id) => {
+    navigate(`/admin/toys/view/${id}`);
+  };
+
+  const handleEdit = (id) => {
+    navigate(`/admin/toys/edit/${id}`);
+  };
+
+  const handleDelete = async (id) => {
+  const token = localStorage.getItem("token")
+  if (window.confirm("Are you sure you want to delete this toy?")) {
+    try {
+      const response = await deleteToyById(id, token);
+      if (response.success) {
+        setToys((prevToys) => prevToys.filter((toy) => toy._id !== id));
+        alert("Toy deleted successfully");
+      } else {
+        alert("Failed to delete toy");
+      }
+    } catch (error) {
+      console.error("Delete error:", error);
+      alert("An error occurred");
+    }
+  }
+};
+
 
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100">
@@ -38,6 +66,7 @@ const AdminToyView = () => {
               <th className="px-4 py-2 border">Category</th>
               <th className="px-4 py-2 border">Quantity</th>
               <th className="px-4 py-2 border">Dimensions (cm)</th>
+              <th className="px-4 py-2 border">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -51,6 +80,30 @@ const AdminToyView = () => {
                 <td className="px-4 py-2 border">{toy.quantity}</td>
                 <td className="px-4 py-2 border">
                   {toy.dimensions?.length} x {toy.dimensions?.width} x {toy.dimensions?.height}
+                </td>
+                <td className="px-4 py-2 border space-x-2">
+                    <div className="flex justify-center gap-3">
+
+                   
+                  <button
+                    onClick={() => handleView(toy._id)}
+                    className="text-white px-2 rounded  bg-blue-500 hover:bg-blue-400"
+                  >
+                    View
+                  </button>
+                  <button
+                    onClick={() => handleEdit(toy._id)}
+                    className= "text-white px-2 rounded  bg-yellow-500 hover:bg-yellow-400"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(toy._id)}
+                    className= "text-white px-2 rounded  bg-red-500 hover:bg-red-400"
+                  >
+                    Delete
+                  </button>
+                   </div>
                 </td>
               </tr>
             ))}

@@ -99,6 +99,7 @@ exports.getToysBySeller = async (req, res) => {
   }
 };
 
+
 // Get toy by ID
 
 exports.getToyById = async (req, res) =>{
@@ -126,6 +127,23 @@ exports.getToysByCategory = async (req, res) => {
   } catch (error) {
     console.error("Error fetching toys by category:", error.message);
     res.status(500).json({ success: false, message: "Something went wrong" });
+  }
+};
+
+// Delete toy by ID
+exports.deleteToy = async (req, res) => {
+  try {
+    const toyId = req.params.id;
+    const deletedToy = await Toy.findByIdAndDelete(toyId);
+
+    if (!deletedToy) {
+      return res.status(404).json({ success: false, message: "Toy not found" });
+    }
+
+    res.status(200).json({ success: true, message: "Toy deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting toy:", error.message);
+    res.status(500).json({ success: false, message: "Deletion failed", error: error.message });
   }
 };
 

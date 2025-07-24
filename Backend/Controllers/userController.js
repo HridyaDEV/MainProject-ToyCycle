@@ -8,14 +8,13 @@ exports.getUserProfile = async (req, res) => {
       return res.status(400).json({ message: "Missing user ID from token" });
     }
 
-    // Get user data (excluding password)
     const user = await User.findById(req.userId).select("-password");
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // ✅ Fetch children linked to the user
+    //  Fetch children linked to the user
     const children = await Child.find({ parentId: req.userId }).sort({ createdAt: -1 });
 
     // Merge children into user object
@@ -41,3 +40,59 @@ exports.getAllUsers = async(req,res) =>{
     res.status(500).json({message:"failed to etch users",error})
   }
 }
+
+// exports.getUserById = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+
+//     // Validate ID
+//     if (!id) {
+//       return res.status(400).json({ message: "User ID is required" });
+//     }
+
+//     // Fetch user by ID
+//     const user = await User.findById(id).select('-password');
+
+//     if (!user) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+
+//     return res.status(200).json({ user });
+//   } catch (error) {
+//     console.error("Error fetching user by ID:", error.message);
+//     return res.status(500).json({ message: "Server error", error: error.message });
+//   }
+// };
+
+
+exports.getUserById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+
+    // Fetch user details (excluding password)
+    const user = await User.findById(id).select('-password');
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Fetch children of this user
+    const children = await Child.find({ parentId: id }).sort({ createdAt: -1 });
+
+    // Combine user and children
+    const userWithChildren = {
+      ...user.toObject(),
+      children,
+    };
+
+    return res.status(200).json({ user: userWithChildren });
+  } catch (error) {
+    console.error("Error fetching user by ID:", error.message);
+    return res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+

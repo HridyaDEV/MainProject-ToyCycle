@@ -62,3 +62,17 @@ export const getToysByCategory = async (category) => {
     return { success: false, data: [] };
   }
 };
+
+export const deleteToyById = async (id, token) => {
+  try {
+    const res = await axios.delete(`${url}/toy/admin/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    return res.data;
+  } catch (error) {
+    console.error("Error deleting toy:", error);
+    throw error;
+  }
+};
