@@ -41,30 +41,6 @@ exports.getAllUsers = async(req,res) =>{
   }
 }
 
-// exports.getUserById = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-
-//     // Validate ID
-//     if (!id) {
-//       return res.status(400).json({ message: "User ID is required" });
-//     }
-
-//     // Fetch user by ID
-//     const user = await User.findById(id).select('-password');
-
-//     if (!user) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
-
-//     return res.status(200).json({ user });
-//   } catch (error) {
-//     console.error("Error fetching user by ID:", error.message);
-//     return res.status(500).json({ message: "Server error", error: error.message });
-//   }
-// };
-
-
 exports.getUserById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -96,3 +72,22 @@ exports.getUserById = async (req, res) => {
   }
 };
 
+exports.getUserByIdDelete = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Delete user
+    const deletedUser = await User.findByIdAndDelete(id);
+    if (!deletedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Optional: Delete associated children as well
+    await Child.deleteMany({ parentId: id });
+
+    return res.status(200).json({ message: "User and their children deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting user:", error.message);
+    return res.status(500).json({ message: "Server error", error: error.message });
+  }
+};

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getAllUsers } from '../Api/userApi';
+import { getAllUsers, deleteUserById } from '../Api/userApi';
 import SideBar from '../components/SideBar';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,7 +7,7 @@ const AdminUserView = () => {
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
 
-  useEffect(() => {
+  const fetchUsers = () => {
     getAllUsers()
       .then(data => {
         console.log("Fetched users:", data?.users);
@@ -16,7 +16,24 @@ const AdminUserView = () => {
       .catch(err => {
         console.error("Error fetching users:", err);
       });
+  };
+
+  useEffect(() => {
+    fetchUsers();
   }, []);
+
+  const handleDelete = async (id) => {
+    const confirm = window.confirm("Are you sure you want to delete this user?");
+    if (!confirm) return;
+
+    try {
+      await deleteUserById(id);
+      alert("User deleted successfully");
+      fetchUsers()
+    } catch (error) {
+      alert("Failed to delete user");
+    }
+  };
 
   return (
     <div className="p-6 pl-72 min-h-screen bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100">
@@ -39,13 +56,23 @@ const AdminUserView = () => {
                 <td className="border px-4 py-2">{user.userName}</td>
                 <td className="border px-4 py-2">{user.email}</td>
                 <td className="border px-4 py-2">{user.role}</td>
-                <td className="border px-4 py-2">
-                  <button
-                    onClick={() => navigate(`/userdetails/${user._id}`)}
-                    className="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1 rounded"
-                  >
-                    View
-                  </button>
+                <td className="border px-4 py-2 ">
+                  <div className='flex justify-center gap-3'>
+
+                    <button
+                      onClick={() => navigate(`/userdetails/${user._id}`)}
+                      className="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1 rounded"
+                    >
+                      View
+                    </button>
+                    <button
+                      onClick={() => handleDelete(user._id)}
+                      className="bg-red-600 hover:bg-red-500 text-white px-3 py-1 rounded"
+                    >
+                      Delete
+                    </button>
+                  </div>
+
                 </td>
               </tr>
             ))}

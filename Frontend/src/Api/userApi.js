@@ -26,3 +26,13 @@ const response = await axios.get(`${url}/user/admin/user/${id}`);
   }
 };
 
+export const deleteUserById = async (id) => {
+  try {
+    const response = await axios.delete(`${url}/user/admin/user/${id}`);
+    return response.data;
+  } catch (err) {
+    console.error("Delete API error:", err);
+    throw err;
+  }
+};
+
