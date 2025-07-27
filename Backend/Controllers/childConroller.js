@@ -30,3 +30,21 @@ exports.getChildrenByParent = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+exports.updateChild = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const updatedChild = await Child.findByIdAndUpdate(id, req.body, {
+      new: true,
+      runValidators: true
+    });
+
+    if (!updatedChild) return res.status(404).json({ message: "Child not found" });
+
+    res.status(200).json({ message: "Child updated", child: updatedChild });
+  } catch (error) {
+    console.error("Update Child Error:", error);
+    res.status(500).json({ message: "Internal server error", error: error.message });
+  }
+};

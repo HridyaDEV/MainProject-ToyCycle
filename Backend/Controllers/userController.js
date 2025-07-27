@@ -91,3 +91,25 @@ exports.getUserByIdDelete = async (req, res) => {
     return res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+exports.updateUserProfile = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const updateData = req.body;
+
+    if (!userId) return res.status(400).json({ message: "Missing user ID" });
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
+      new: true,
+      runValidators: true,
+      select: "-password"
+    });
+
+    if (!updatedUser) return res.status(404).json({ message: "User not found" });
+
+    return res.status(200).json({ message: "User updated", user: updatedUser });
+  } catch (error) {
+    console.error("Error updating user profile:", error);
+    return res.status(500).json({ message: "Server error", error: error.message });
+  }
+};

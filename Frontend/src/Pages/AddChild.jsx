@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const AddChild = () => {
   const [form, setForm] = useState({
@@ -10,7 +11,7 @@ const AddChild = () => {
   });
 
   const navigate = useNavigate();
-  const parentId = localStorage.getItem("userId"); // Or from token decoding
+  const parentId = localStorage.getItem("userId"); 
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -23,11 +24,11 @@ const AddChild = () => {
         ...form,
         parentId,
       });
-      alert("✅ Child added successfully!");
+      toast.success(" Child added successfully!");
       navigate("/profile");
     } catch (err) {
       console.error("❌ Error:", err);
-      alert("Failed to add child.");
+      toast.error("Failed to add child.");
     }
   };
 

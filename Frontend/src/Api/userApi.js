@@ -36,3 +36,22 @@ export const deleteUserById = async (id) => {
   }
 };
 
+export const updateUserProfile = async (token, updateData) => {
+  const res = await fetch(`${url}/user/profile`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(updateData),
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw new Error(errorData.message || "Failed to update user profile");
+  }
+
+  return await res.json();
+};
+
+
