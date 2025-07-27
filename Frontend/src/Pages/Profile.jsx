@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FaArrowLeft, FaChild, FaEdit, FaHeart } from "react-icons/fa";
+import { FaArrowLeft, FaEdit, FaHeart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { getUserProfile, updateUserProfile } from "../Api/userApi";
 import { getMyToys } from "../Api/toyApi";
@@ -68,7 +68,6 @@ const Profile = () => {
             if (editChildIndex !== null) {
                 const child = editedUser.children[editChildIndex];
                 await updateChildById(token, child._id, {
-
                     name: child.name,
                     dateOfBirth: child.dateOfBirth,
                     gender: child.gender,
@@ -84,7 +83,6 @@ const Profile = () => {
             toast.error(error.message || "Update failed.");
         }
     };
-
 
     if (!user) {
         return <div className="text-center mt-20 text-amber-800 font-semibold text-xl">Loading profile...</div>;
@@ -147,14 +145,15 @@ const Profile = () => {
                             </div>
                         </section>
 
-                        {user.children?.length > 0 && (
-                            <section className="bg-white border border-amber-200 rounded-2xl shadow-md p-5">
-                                <div className="flex justify-between items-center">
-                                    <h3 className="text-lg font-semibold text-amber-800">Your Children</h3>
-                                    <button onClick={() => navigate("/addchild")} className="bg-amber-100 hover:bg-amber-200 text-grey px-3 py-1.5 rounded-lg text-sm flex items-center">
-                                        <HiOutlinePlusSm className="mr-2" /> Add Child
-                                    </button>
-                                </div>
+                        <section className="bg-white border border-amber-200 rounded-2xl shadow-md p-5">
+                            <div className="flex justify-between items-center">
+                                <h3 className="text-lg font-semibold text-amber-800">Your Children</h3>
+                                <button onClick={() => navigate("/addchild")} className="bg-amber-100 hover:bg-amber-200 text-grey px-3 py-1.5 rounded-lg text-sm flex items-center">
+                                    <HiOutlinePlusSm className="mr-2" /> Add Child
+                                </button>
+                            </div>
+
+                            {user.children?.length > 0 ? (
                                 <div className="space-y-4 mt-4">
                                     {user.children.map((child, i) => (
                                         <div key={i} className="p-3 rounded-lg shadow-sm bg-gray-100">
@@ -184,25 +183,24 @@ const Profile = () => {
                                                     </div>
                                                 </>
                                             ) : (
-                                                <>
-                                                    <div className="flex justify-between">
-                                                        <div>
-                                                            <p className="text-base font-semibold text-gray-800">{child.name}</p>
-                                                            <p className="text-sm text-gray-600">Age: {calculateAge(child.dateOfBirth)} years</p>
-                                                            <p className="text-sm text-gray-600">Gender: {child.gender}</p>
-                                                        </div>
-                                                        <button onClick={() => { setEditChildIndex(i); setEditedUser({ ...user }); }}
-                                                            className="mt-2 text-sm bg-amber-100 hover:bg-amber-200 px-3 py-1.5 rounded-lg  flex items-center">
-                                                            <FaEdit className="mr-1 " /> Edit Child
-                                                        </button>
+                                                <div className="flex justify-between">
+                                                    <div>
+                                                        <p className="text-base font-semibold text-gray-800">{child.name}</p>
+                                                        <p className="text-sm text-gray-600">Age: {calculateAge(child.dateOfBirth)} years</p>
+                                                        <p className="text-sm text-gray-600">Gender: {child.gender}</p>
                                                     </div>
-                                                </>
+                                                    <button onClick={() => { setEditChildIndex(i); setEditedUser({ ...user }); }} className="mt-2 text-sm bg-amber-100 hover:bg-amber-200 px-3 py-1.5 rounded-lg flex items-center">
+                                                        <FaEdit className="mr-1" /> Edit Child
+                                                    </button>
+                                                </div>
                                             )}
                                         </div>
                                     ))}
                                 </div>
-                            </section>
-                        )}
+                            ) : (
+                                <p className="text-sm text-gray-500 italic mt-4">You haven't added any children yet.</p>
+                            )}
+                        </section>
                     </div>
 
                     <div className="md:w-2/3">
