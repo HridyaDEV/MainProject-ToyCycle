@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard";
 import { getAllToy } from "../Api/toyApi";
 import { useNavigate } from "react-router-dom";
-import { BsFillCartFill } from "react-icons/bs";
 import { FaArrowLeft } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
 import CartBtn from "../components/CartBtn";
@@ -14,19 +13,16 @@ const Shop = () => {
     const [category, setCategory] = useState("All");
 
     const navigate = useNavigate();
+    
+useEffect(() => {
+  getAllToy()
+    .then((data) => {
+      setProducts(data);
+      setDisplayedProducts(data);
+    })
+    .catch((err) => console.error("Error:", err));
+}, []);
 
-    useEffect(() => {
-        getAllToy()
-            .then((res) => {
-                if (res.success) {
-                    setProducts(res.data);
-                    setDisplayedProducts(res.data);
-                } else {
-                    console.error("Failed to fetch toys:", res.message);
-                }
-            })
-            .catch((err) => console.error("Error:", err));
-    }, []);
 
     useEffect(() => {
         let filtered = [...products];

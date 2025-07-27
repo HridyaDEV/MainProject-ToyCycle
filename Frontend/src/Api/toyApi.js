@@ -27,14 +27,21 @@ export const getNewToy = async () => {
 };
 
 export const getAllToy = async () => {
+  const token = localStorage.getItem("token"); // or sessionStorage or your context
+
   try {
-    const response = await axios.get(`${url}/toy/all`)
-    return response.data;
+    const response = await axios.get(`${url}/toy/all`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data.data;
   } catch (error) {
     console.error("Error fetching  toys:", error);
     throw error;
   }
 };
+
 // get toys sell by user
 export const getMyToys = async (token) => {
   const res = await axios.get(`${url}/toy/mytoys`, {

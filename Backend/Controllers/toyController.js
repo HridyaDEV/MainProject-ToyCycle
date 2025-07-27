@@ -5,16 +5,10 @@ const { saveFileToDisk } = require("../config/multer");
 exports.sellToy = async (req, res) => {
   try {
 
-    const { title,  price, description, ageCategory, toyCategory, condition,   material,
-      color,
-      weight,
-      quantity,
-      dimensionsLength,
-      dimensionsWidth,
-      dimensionsHeight,
-      isBatteryOperated,
-      batteryType} = req.body;
-
+    const {
+      title, price, description, ageCategory, toyCategory, condition, material, color, weight,
+      quantity, dimensionsLength, dimensionsWidth, dimensionsHeight, isBatteryOperated, batteryType
+    } = req.body;
 
     if (!title || !price || !description || !ageCategory || !toyCategory || !condition) {
       return res.status(400).json({ success: false, message: "All required fields must be filled" });
@@ -46,17 +40,17 @@ exports.sellToy = async (req, res) => {
       isBatteryOperated: isBatteryOperated === 'true',
       batteryType: batteryType || undefined,
     });
-console.log("Toy to save:", newToy);
+    console.log("Toy to save:", newToy);
 
     await newToy.save();
     return res.status(201).json({ success: true, data: newToy });
   } catch (error) {
     console.error(" Error selling toy:", error.message);
-  return res.status(500).json({
-    success: false,
-    message: "Toy save failed",
-    error: error.message,
-  });
+    return res.status(500).json({
+      success: false,
+      message: "Toy save failed",
+      error: error.message,
+    });
   }
 };
 
@@ -65,10 +59,10 @@ exports.getNewToys = async (req, res) => {
   try {
     // const toys = await Toy.find().sort({ createdAt: -1 }).limit(8)
     const toys = await Toy.aggregate([
-       { $sort: { createdAt: -1 } },
-    { $limit: 8 }
-]);
-const updatedToys =toys.slice(0,8)
+      { $sort: { createdAt: -1 } },
+      { $limit: 8 }
+    ]);
+    const updatedToys = toys.slice(0, 8)
     res.status(200).json({ success: true, data: updatedToys })
   } catch (error) {
     console.error("Error fetching toys:", error)
@@ -78,8 +72,11 @@ const updatedToys =toys.slice(0,8)
 
 // Get all toy listings
 exports.getAllToys = async (req, res) => {
+   const currentUserId = req.userId;
+  console.log("Current User ID:", req.userId);
+
   try {
-    const toys = await Toy.find();
+    const toys = await Toy.find({ sellerId: { $ne: currentUserId } });
     res.status(200).json({ success: true, data: toys });
   } catch (error) {
     console.error("Error fetching all toys:", error);
@@ -101,24 +98,22 @@ exports.getToysBySeller = async (req, res) => {
 
 
 // Get toy by ID
-
-exports.getToyById = async (req, res) =>{
+exports.getToyById = async (req, res) => {
   try {
-    const toy = await Toy.findById(req.params.id).populate("sellerId","userName email")
-    if(!toy) {
-      return res.status(404).json({success:false, message: " Toy not found"})
+    const toy = await Toy.findById(req.params.id).populate("sellerId", "userName email")
+    if (!toy) {
+      return res.status(404).json({ success: false, message: " Toy not found" })
     }
-    res.status(200).json({ success:true, data : toy})
+    res.status(200).json({ success: true, data: toy })
   } catch (error) {
     console.error("Error fetching toy: ", error)
-    res.status(500).json({success:false, message:"server error"})
+    res.status(500).json({ success: false, message: "server error" })
   }
 }
 
-
 exports.getToysByCategory = async (req, res) => {
   try {
-    const category = decodeURIComponent(req.params.category); 
+    const category = decodeURIComponent(req.params.category);
     console.log("Searching toys in category:", category);
 
     const toys = await Toy.find({ toyCategory: category });
