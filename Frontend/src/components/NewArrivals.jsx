@@ -6,19 +6,21 @@ const NewArrivals = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    getNewToy()
-      .then((res) => {
-        console.log("API response:", res);
-        if (res.success) {
-          setProducts(res.data);
-        } else {
-          console.error("Failed to load toys:", res.message);
-        }
-      })
-      .catch((err) => {
-        console.error("Error loading new toys:", err);
-      });
-  }, []);
+  const token = localStorage.getItem("token");
+  getNewToy(token)
+    .then((res) => {
+      console.log("API response:", res);
+      if (res.success) {
+        setProducts(res.data);
+      } else {
+        console.error("Failed to load toys:", res.message);
+      }
+    })
+    .catch((err) => {
+      console.error("Error loading new toys:", err);
+    });
+}, []);
+
 
   
 

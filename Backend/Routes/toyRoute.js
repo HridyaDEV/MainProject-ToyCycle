@@ -6,7 +6,7 @@ const { sellToy, getNewToys, getAllToys, getToysBySeller, getToyById, getToysByC
 const { upload } = require("../config/multer");
 
 router.post("/sell", verifyToken, upload.single("image"), sellToy);
-router.get('/new', getNewToys)
+router.get('/new',verifyToken, getNewToys)
 router.get("/all",verifyToken, getAllToys);
 router.get("/mytoys", verifyToken, getToysBySeller)
 router.get("/:id", getToyById)
