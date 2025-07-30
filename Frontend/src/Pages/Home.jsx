@@ -9,6 +9,7 @@ import NewArrivals from "../components/NewArrivals";
 import CartBtn from "../components/CartBtn";
 import ProfileBtn from "../components/ProfileBtn";
 import CategoryCardList from "../components/CategoryCardList";
+import Testimonials from "../components/Testimonials";
 
 function Home() {
   const navigate = useNavigate();
@@ -162,6 +163,10 @@ function Home() {
             </div>
           </div>
         </div>
+      </div>
+      {/* Testimonials */}
+      <div className="max-w-7xl mx-auto" >
+        <Testimonials/>
       </div>
     </>
   );
