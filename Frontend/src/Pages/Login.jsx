@@ -47,7 +47,7 @@ localStorage.setItem("user", JSON.stringify(res.data.user));
 
         {/* Left Content */}
         <div className="flex-1 flex items-center justify-center">
-          <h1 className="text-4xl font-bold text-amber-950">ToyCyle</h1>
+          <h1 className="text-4xl font-bold text-amber-950">ToyCycle</h1>
         </div>
 
         {/* Vertical line */}
@@ -64,7 +64,7 @@ localStorage.setItem("user", JSON.stringify(res.data.user));
            
              
               <div className="flex flex-col justify-center ">
-                <label htmlFor="email" className="text-left mb-1 text-gray-700 font-semibold">Email</label>
+                <label htmlFor="email" className="text-left mb-1 text-amber-950 font-semibold">Email</label>
                 <input
                   type="text"
                   id="email"
@@ -72,11 +72,12 @@ localStorage.setItem("user", JSON.stringify(res.data.user));
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="border border-gray-400 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500 w-[500px]  "
+                  className="border border-gray-400  focus:outline-none focus:ring-2 focus:ring-yellow-500 w-[500px] 
+                  rounded-xl px-4 py-2  "
                 />
               </div>
               <div className="flex flex-col justify-center ">
-                <label htmlFor="password" className="text-left mb-1 text-gray-700 font-semibold">Password</label>
+                <label htmlFor="password" className="text-left mb-1 text-amber-950 font-semibold">Password</label>
                 <input
                   type="text"
                   id="password"
@@ -84,15 +85,16 @@ localStorage.setItem("user", JSON.stringify(res.data.user));
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className="border border-gray-400 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500 w-[500px]  "
+                  className="border border-gray-400 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500 w-[500px]  "
                 />
               </div>
               <div className="flex justify-center w-full">
-                <button type='submit' className='bg-yellow-400 text-amber-950 font-semibold px-4 py-2 rounded-lg w-40 text-center'>
-                  Login
+                <button type='submit' className='bg-yellow-400 text-amber-950 font-bold px-4 py-2 rounded-lg w-40 text-center
+                hover:bg-yellow-500'>
+                  LOGIN
                 </button>
               </div>
-              <p className="text-center text-gray-700 mt-2">Don't have an account? <a href="/signup" className="text-amber-950 underline">Register here</a></p>
+              <p className="text-center text-gray-700 mt-2">Don't have an account? <a href="/signup" className="text-amber-950 underline font-semibold">Register here</a></p>
             </form>
           </div>
         </div>
