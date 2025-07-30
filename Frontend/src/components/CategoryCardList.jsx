@@ -23,9 +23,8 @@ const CategoryCardList = ({ showAll = false }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      
       const res = await getAllCategories();
-       console.log("Fetched categories:", res);
+      console.log("Fetched categories:", res);
       if (res.success) {
         const data = showAll ? res.data : res.data.slice(0, 4);
         setCategories(data);
@@ -35,8 +34,8 @@ const CategoryCardList = ({ showAll = false }) => {
   }, [showAll]);
 
   return (
-    <div >
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 px-15 md:px-16 mt-15">
+    <div className="max-w-7xl mx-auto px-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mt-15">
         {categories.map((cat, idx) => (
           <Link to={`/category/${encodeURIComponent(cat)}`} key={idx}>
             <div className="bg-white rounded-xl shadow-md p-4 text-center h-90 cursor-pointer hover:shadow-lg transition">
@@ -54,7 +53,7 @@ const CategoryCardList = ({ showAll = false }) => {
       </div>
 
       {!showAll && (
-        <div className="flex justify-end px-4 md:px-16 mt-6">
+        <div className="flex justify-end mt-6">
           <button
             onClick={() => navigate("/categories")}
             className="bg-yellow-500 hover:bg-yellow-600 text-amber-950 font-semibold px-5 py-2 rounded-md flex items-center gap-2"

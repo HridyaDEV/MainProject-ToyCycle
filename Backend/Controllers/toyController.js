@@ -50,27 +50,20 @@ exports.sellToy = async (req, res) => {
   }
 };
 
-// Get the latest 8 toys excluding the logged-in user's listings
+// Get the latest 8 toy 
 exports.getNewToys = async (req, res) => {
   try {
-    const currentUserId = req.userId;
-
     const toys = await Toy.aggregate([
-      {
-        $match: {
-sellerId: { $ne: new mongoose.Types.ObjectId(currentUserId) }
-        }
-      },
       { $sort: { createdAt: -1 } },
       { $limit: 8 }
     ]);
-
-    res.status(200).json({ success: true, data: toys });
+    const updatedToys = toys.slice(0, 8)
+    res.status(200).json({ success: true, data: updatedToys })
   } catch (error) {
-    console.error("Error fetching new toys:", error.message);
-    res.status(500).json({ success: false, message: "Server error" });
+    console.error("Error fetching toys:", error)
+    res.status(500).json({ success: false, message: "Server error" })
   }
-};
+}
 
 
 // Get all toy listings

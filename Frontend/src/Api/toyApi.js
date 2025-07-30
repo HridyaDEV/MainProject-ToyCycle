@@ -16,20 +16,15 @@ export const sellToy = async (formData, token) => {
   }
 };
 
-export const getNewToy = async (token) => {
+export const getNewToy = async () => {
   try {
-    const response = await axios.get(`${url}/toy/new`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axios.get(`${url}/toy/new`)
     return response.data;
   } catch (error) {
     console.error("Error fetching new toys:", error);
     throw error;
   }
 };
-
 
 export const getAllToy = async () => {
   const token = localStorage.getItem("token"); // or sessionStorage or your context
