@@ -10,7 +10,7 @@ const Testimonials = () => {
             </h2>
 
             {/* First Row: Two Testimonials */}
-            <div className="flex flex-col md:flex-row justify-center gap-8 mb-8">
+            <div className="flex flex-col md:flex-row justify-center gap-20 mb-8">
                 <div className="flex-1 min-w-[280px] max-w-[400px] h-[300px] bg-white p-6 rounded-lg shadow-md border-t-4 border-orange-400 flex flex-col justify-between">
 
                     <RiDoubleQuotesL className="text-amber-950 text-xl mt-5" />

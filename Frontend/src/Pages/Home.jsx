@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { AiOutlineSafety } from "react-icons/ai";
-import { BsFillCartFill } from "react-icons/bs";
 import { GrChat } from "react-icons/gr";
 import { MdOutlineToys } from "react-icons/md";
 import { PiSyringeBold } from "react-icons/pi";
@@ -10,6 +9,11 @@ import CartBtn from "../components/CartBtn";
 import ProfileBtn from "../components/ProfileBtn";
 import CategoryCardList from "../components/CategoryCardList";
 import Testimonials from "../components/Testimonials";
+import { TiSocialFacebook } from "react-icons/ti";
+import { FaInstagram, FaWhatsapp } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
+import { LuFacebook } from "react-icons/lu";
+
 
 function Home() {
   const navigate = useNavigate();
@@ -30,11 +34,14 @@ function Home() {
       <div className="bg-white shadow-lg sticky top-0 z-10">
         <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-3">
           <h1 className="text-amber-950 font-bold text-3xl">ToyCycle</h1>
-          <ul className="flex gap-6 text-amber-950 font-semibold">
+          <ul className="flex gap-6 text-amber-950  text-base font-semibold">
             <li><a href="#top" className="hover:text-yellow-600">Home</a></li>
             <li><a href="#features" className="hover:text-yellow-600">Features</a></li>
             <li><a href="#categories" className="hover:text-yellow-600">Categories</a></li>
             <li><a href="#new" className="hover:text-yellow-600">New Arrivals</a></li>
+             <li><a href="#about" className="hover:text-amber-950">About</a></li>
+              <li><a href="#test" className="hover:text-amber-950">Testimonials</a></li>
+               <li><a href="#contact" className="hover:text-amber-950">Contact </a></li>
           </ul>
           <div className="flex gap-3">
             {userRole === "user" && <ProfileBtn />}
@@ -165,8 +172,48 @@ function Home() {
         </div>
       </div>
       {/* Testimonials */}
-      <div className="max-w-7xl mx-auto" >
-        <Testimonials/>
+      <div id="test" className="max-w-7xl mx-auto" >
+        <Testimonials />
+      </div>
+      {/* Contact US */}
+
+      <div id="contact" className="  bg-yellow-500 w-full ">
+        <div className="flex justify-around py-8  ">
+          <div>
+            <h2 className="text-2xl text-amber-950 font-semibold py-3">Office</h2>
+            <p className="text-gray-800">ABC Street, New Town <br />
+              Calicut , Kerala <br />
+              678900
+            </p>
+          </div>
+          <div className="">
+            <h2 className="text-2xl text-amber-950  font-semibold py-3">Links</h2>
+            <ul className="  text-gray-800 gap-1 ">
+              <li><a href="#top" className="hover:text-amber-950">Home</a></li>
+              <li><a href="#features" className="hover:text-amber-950">Features</a></li>
+              <li><a href="#categories" className="hover:text-amber-950">Categories</a></li>
+              <li><a href="#new" className="hover:text-amber-950">New Arrivals</a></li>
+              <li><a href="#about" className="hover:text-amber-950">About Us</a></li>
+              <li><a href="#test" className="hover:text-amber-950">Testimonials</a></li>
+               <li><a href="#contact" className="hover:text-amber-950">Contact Us</a></li>
+            </ul>
+          </div>
+          <div>
+            <h2 className="text-2xl text-amber-950  font-semibold py-3">Get In Touch</h2>
+            <div className="flex justify-center text-xl text-gray-800 gap-2">
+              <FaInstagram />
+              <LuFacebook />
+              <FaXTwitter />
+              <FaWhatsapp />
+            </div>
+          </div>
+        </div>
+      </div>
+
+{/* footer */}
+      <div className="bg-gray-300 flex justify-between px-30 py-3 ">
+        <h1>@ Copyrights @ToyCycle</h1>
+        <h1>Terms & Conditions</h1>
       </div>
     </>
   );
