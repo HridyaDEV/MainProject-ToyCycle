@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 import { BsCartX } from "react-icons/bs";
 import { createCheckoutSession } from "../Api/paymentApi";
+import { jwtDecode } from "jwt-decode";
+
 
 const Cart = () => {
   const [items, setItems] = useState([]);
@@ -11,14 +13,19 @@ const Cart = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    
     if (!token) return navigate("/login");
 
     const fetchCart = async () => {
       try {
-            const token = localStorage.getItem("token");
+        const token = localStorage.getItem("token");
         const data = await getCartItems(token);
-        setItems(data);
+
+        // Filter out null or invalid entries
+        const filteredData = data.filter(
+          (item) => item && typeof item.price === "number" && item.imageUrl
+        );
+
+        setItems(filteredData);
       } catch (error) {
         console.error("Failed to fetch cart items:", error);
       }
@@ -26,6 +33,10 @@ const Cart = () => {
 
     fetchCart();
   }, [token, navigate]);
+
+  const decoded = token ? jwtDecode(token) : null;
+const userId = decoded?.id;
+
 
   const handleRemove = async (toyId) => {
     try {
@@ -35,20 +46,23 @@ const Cart = () => {
       console.error("Error removing item:", error);
     }
   };
-  console.log("Cart Items:", items); 
 
- const handleCheckout = async () => {
-  try {
-    const data = await createCheckoutSession(items); // 'items' should be your cart array
-    window.location.href = data.url;
-  } catch (error) {
-    console.error("Checkout failed", error);
-    alert("Something went wrong during checkout.");
-  }
-};
+  const handleCheckout = async () => {
+    try {
+      const data = await createCheckoutSession(items,userId);
+      window.location.href = data.url;
+    } catch (error) {
+      console.error("Checkout failed", error);
+      alert("Something went wrong during checkout.");
+    }
+  };
 
-
-const total = items.reduce((acc, item) => acc + item.price * (item.quantity || 1), 0);
+  const total = items.reduce((acc, item) => {
+    if (item && typeof item.price === "number") {
+      return acc + item.price * (item.quantity || 1);
+    }
+    return acc;
+  }, 0);
 
   return (
     <div className="min-h-screen bg-amber-50">
@@ -56,7 +70,7 @@ const total = items.reduce((acc, item) => acc + item.price * (item.quantity || 1
         <h1 className="text-3xl font-bold text-amber-900 tracking-wide">ToyCycle</h1>
       </header>
 
-      <div className="px-15 py-5 mt-5  ">
+      <div className="px-15 py-5 mt-5">
         <button
           onClick={() => navigate(-1)}
           className="flex items-center text-amber-950 hover:text-amber-700 text-base mb-6"
@@ -64,7 +78,9 @@ const total = items.reduce((acc, item) => acc + item.price * (item.quantity || 1
           <FaArrowLeft className="mr-2" /> Go Back
         </button>
 
-        <h1 className=" flex justify-center text-3xl font-bold text-amber-900 mb-6">Your Cart</h1>
+        <h1 className="flex justify-center text-3xl font-bold text-amber-900 mb-6">
+          Your Cart
+        </h1>
 
         {items.length === 0 ? (
           <div className="flex flex-col items-center justify-center text-gray-500 mt-20">
@@ -86,18 +102,20 @@ const total = items.reduce((acc, item) => acc + item.price * (item.quantity || 1
               >
                 <img
                   src={`http://localhost:5115${item.imageUrl}`}
-                  alt={item.title}
+                  alt={item.title || "Toy Image"}
                   className="w-28 h-28 object-cover rounded-md"
                 />
                 <div className="flex-1 text-center sm:text-left">
                   <h2 className="text-lg font-semibold text-gray-800">{item.title}</h2>
                   <p className="text-yellow-800 font-medium mt-1">₹ {item.price}</p>
-                   {item.quantity && (
-    <>
-      <p className="text-sm text-gray-600 mt-1">Quantity: {item.quantity}</p>
-      <p className="text-sm text-gray-800 font-semibold">Subtotal: ₹ {item.price * item.quantity}</p>
-    </>
-  )}
+                  {item.quantity && (
+                    <>
+                      <p className="text-sm text-gray-600 mt-1">Quantity: {item.quantity}</p>
+                      <p className="text-sm text-gray-800 font-semibold">
+                        Subtotal: ₹ {item.price * item.quantity}
+                      </p>
+                    </>
+                  )}
                 </div>
                 <button
                   onClick={() => handleRemove(item._id)}

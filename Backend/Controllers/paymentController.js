@@ -30,6 +30,7 @@ exports.createCheckoutSession = async (req, res) => {
         userId,
       },
     });
+console.log("📥 Received userId:", userId);
 
     res.status(200).json({ url: session.url });
   } catch (error) {
@@ -39,11 +40,13 @@ exports.createCheckoutSession = async (req, res) => {
 };
 
 exports.stripeWebhook = async (req, res) => {
+  console.log("✅ Webhook route hit");
   const sig = req.headers['stripe-signature'];
   let event;
 
   try {
     event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+    console.log("✅ Webhook verified:", event.type);
   } catch (err) {
     console.error('Webhook Error:', err.message);
     return res.status(400).send(`Webhook Error: ${err.message}`);
@@ -51,24 +54,38 @@ exports.stripeWebhook = async (req, res) => {
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
+    console.log("💡 Checkout session completed:", session.id);
 
     try {
+         console.log("📦 Metadata received:", session.metadata);
+
       const cartItems = JSON.parse(session.metadata.cartItems);
       const userId = session.metadata.userId;
 
+       console.log("🛒 Parsed cartItems:", cartItems);
+    console.log("👤 Parsed userId:", userId);
+
+      const formattedItems = cartItems.map(item => ({
+        toyId: item.toyId,
+        quantity: item.quantity,
+      }));
+
+       console.log("📦 Formatted items to save:", formattedItems);
+
       const order = new Order({
         userId,
-        items: cartItems,
+        items: formattedItems,
         totalAmount: session.amount_total / 100,
         paymentStatus: 'Paid',
       });
 
       await order.save();
-      console.log(' Order saved to DB');
+      console.log('✅ Order saved to DB');
     } catch (error) {
-      console.error('Error saving order:', error);
+      console.error('❌ Error saving order:', error);
     }
   }
 
   res.status(200).json({ received: true });
 };
+

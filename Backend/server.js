@@ -20,9 +20,14 @@ const io= new Server(server,{
 })
 socketConnection(io)
 
-
 // Middleware
 app.use(cors());
+
+const paymentRoute = require('./Routes/paymentRoute')
+const webhookRoute = require('./Routes/webhookRoute'); 
+// Mount webhook route *before* express.json()
+app.use('/payment/webhook', express.raw({ type: 'application/json' }), webhookRoute);
+
 app.use(express.json()); 
 app.use('/uploads', express.static('uploads')); // For image access
 
@@ -39,7 +44,6 @@ const vaccineRoute = require("./Routes/vaccineRoute")
 const childRoute = require("./Routes/childRoute")
 const chatRoute = require("./Routes/chatRoute")
 const dashboardRoute = require("./Routes/dashboardRoute")
-const paymentRoute = require('./Routes/paymentRoute')
 
 
 // Mount routes
@@ -53,7 +57,8 @@ app.use("/vaccine",vaccineRoute)
 app.use("/child",childRoute)
 app.use("/chat",chatRoute)
 app.use("/dashboard", dashboardRoute)
-app.use('/payment',paymentRoute)
+app.use('/payment', paymentRoute); // This handles /payment/checkout-session
+
 
 
 // Database Connection

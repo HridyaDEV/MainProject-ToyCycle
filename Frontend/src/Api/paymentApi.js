@@ -3,14 +3,16 @@ import axios from 'axios';
 
 const url = "http://localhost:5115";
 
-export const createCheckoutSession = async (cartItems) => {
+export const createCheckoutSession = async (cartItems, userId) => {
   try {
     const response = await axios.post(`${url}/payment/checkout-session`, {
       cartItems: cartItems.map(item => ({
+        _id: item._id,        
         title: item.title,
         price: item.price,
         quantity: item.quantity || 1,
       })),
+      userId: userId           
     });
     return response.data;
   } catch (error) {
@@ -18,3 +20,4 @@ export const createCheckoutSession = async (cartItems) => {
     throw error;
   }
 };
+

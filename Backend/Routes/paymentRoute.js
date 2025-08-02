@@ -1,5 +1,5 @@
 const express = require('express')
-const { createCheckoutSession, stripeWebhook } = require('../Controllers/paymentController')
+const { createCheckoutSession} = require('../Controllers/paymentController')
 const router = express.Router()
 
 router.post('/checkout-session', createCheckoutSession)
